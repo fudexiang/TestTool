@@ -1,0 +1,69 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "core", "core", "{F0BDC993-78C0-4872-928F-191F6485E8D6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "example", "example", "{FE126499-B277-4F68-8742-7C7016BFE09B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "consoledemo", "msvc\consoledemo_vc90.vcxproj", "{28C355E1-18E1-4B72-ADB7-3F51D8CAE72A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "x3manager", "msvc\x3manager_vc90.vcxproj", "{55E440C7-B89C-4A2C-A72F-D8EB2D5F7D31}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "plugins", "plugins", "{2AB3FC9D-57B1-4CE5-9CF5-A84E2EBF83C8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LogLib", "plugin\LogLib\LogLib.vcxproj", "{ECD60BBC-A25A-4302-B2A0-01E4AE52ABE2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Comm", "plugin\Comm\Comm.vcxproj", "{91FAD3A0-4414-45DD-AFC8-D765FE4310E3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{28C355E1-18E1-4B72-ADB7-3F51D8CAE72A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{28C355E1-18E1-4B72-ADB7-3F51D8CAE72A}.Debug|Win32.Build.0 = Debug|Win32
+		{28C355E1-18E1-4B72-ADB7-3F51D8CAE72A}.Debug|x64.ActiveCfg = Debug|x64
+		{28C355E1-18E1-4B72-ADB7-3F51D8CAE72A}.Debug|x64.Build.0 = Debug|x64
+		{28C355E1-18E1-4B72-ADB7-3F51D8CAE72A}.Release|Win32.ActiveCfg = Release|Win32
+		{28C355E1-18E1-4B72-ADB7-3F51D8CAE72A}.Release|Win32.Build.0 = Release|Win32
+		{28C355E1-18E1-4B72-ADB7-3F51D8CAE72A}.Release|x64.ActiveCfg = Release|x64
+		{28C355E1-18E1-4B72-ADB7-3F51D8CAE72A}.Release|x64.Build.0 = Release|x64
+		{55E440C7-B89C-4A2C-A72F-D8EB2D5F7D31}.Debug|Win32.ActiveCfg = Debug|Win32
+		{55E440C7-B89C-4A2C-A72F-D8EB2D5F7D31}.Debug|Win32.Build.0 = Debug|Win32
+		{55E440C7-B89C-4A2C-A72F-D8EB2D5F7D31}.Debug|x64.ActiveCfg = Debug|x64
+		{55E440C7-B89C-4A2C-A72F-D8EB2D5F7D31}.Debug|x64.Build.0 = Debug|x64
+		{55E440C7-B89C-4A2C-A72F-D8EB2D5F7D31}.Release|Win32.ActiveCfg = Release|Win32
+		{55E440C7-B89C-4A2C-A72F-D8EB2D5F7D31}.Release|Win32.Build.0 = Release|Win32
+		{55E440C7-B89C-4A2C-A72F-D8EB2D5F7D31}.Release|x64.ActiveCfg = Release|x64
+		{55E440C7-B89C-4A2C-A72F-D8EB2D5F7D31}.Release|x64.Build.0 = Release|x64
+		{ECD60BBC-A25A-4302-B2A0-01E4AE52ABE2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{ECD60BBC-A25A-4302-B2A0-01E4AE52ABE2}.Debug|Win32.Build.0 = Debug|Win32
+		{ECD60BBC-A25A-4302-B2A0-01E4AE52ABE2}.Debug|x64.ActiveCfg = Debug|x64
+		{ECD60BBC-A25A-4302-B2A0-01E4AE52ABE2}.Debug|x64.Build.0 = Debug|x64
+		{ECD60BBC-A25A-4302-B2A0-01E4AE52ABE2}.Release|Win32.ActiveCfg = Release|Win32
+		{ECD60BBC-A25A-4302-B2A0-01E4AE52ABE2}.Release|Win32.Build.0 = Release|Win32
+		{ECD60BBC-A25A-4302-B2A0-01E4AE52ABE2}.Release|x64.ActiveCfg = Release|x64
+		{ECD60BBC-A25A-4302-B2A0-01E4AE52ABE2}.Release|x64.Build.0 = Release|x64
+		{91FAD3A0-4414-45DD-AFC8-D765FE4310E3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{91FAD3A0-4414-45DD-AFC8-D765FE4310E3}.Debug|Win32.Build.0 = Debug|Win32
+		{91FAD3A0-4414-45DD-AFC8-D765FE4310E3}.Debug|x64.ActiveCfg = Debug|x64
+		{91FAD3A0-4414-45DD-AFC8-D765FE4310E3}.Debug|x64.Build.0 = Debug|x64
+		{91FAD3A0-4414-45DD-AFC8-D765FE4310E3}.Release|Win32.ActiveCfg = Release|Win32
+		{91FAD3A0-4414-45DD-AFC8-D765FE4310E3}.Release|Win32.Build.0 = Release|Win32
+		{91FAD3A0-4414-45DD-AFC8-D765FE4310E3}.Release|x64.ActiveCfg = Release|x64
+		{91FAD3A0-4414-45DD-AFC8-D765FE4310E3}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{28C355E1-18E1-4B72-ADB7-3F51D8CAE72A} = {FE126499-B277-4F68-8742-7C7016BFE09B}
+		{55E440C7-B89C-4A2C-A72F-D8EB2D5F7D31} = {F0BDC993-78C0-4872-928F-191F6485E8D6}
+		{ECD60BBC-A25A-4302-B2A0-01E4AE52ABE2} = {2AB3FC9D-57B1-4CE5-9CF5-A84E2EBF83C8}
+		{91FAD3A0-4414-45DD-AFC8-D765FE4310E3} = {2AB3FC9D-57B1-4CE5-9CF5-A84E2EBF83C8}
+	EndGlobalSection
+EndGlobal
