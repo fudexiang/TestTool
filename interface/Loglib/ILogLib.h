@@ -1,7 +1,7 @@
 #pragma once
-#ifndef _ILGLIB_H_
+#ifndef _ILOGLIB_H_
 
-#define _ILGLIB_H_
+#define _ILOGLIB_H_
 
 #include "Common/DataType.h"
 #include "Common/Config.h"

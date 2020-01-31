@@ -8,11 +8,13 @@
 //#define CRC_TEST1
 //#define CRC_TEST2
 //#define UART_TEST
+#define SOCKET_TEST
 
 #include <stdio.h>
 #include "Loglib\ILogLib.h"
 #include "Comlib\IComLib.h"
 #include "HexStr\IHexStr.h"
+#include "SocketLib\ISocketLib.h"
 
 #ifdef CRC_TEST
 typedef struct
@@ -168,7 +170,13 @@ int test()
 
 #ifdef SPDLOG_TEST
 	x3::Object<ILogLib> pLog(clsidLogLib);
+#endif
+#ifdef SOCKET_TEST
+	x3::Object<ISocketLib> pSocket(clsidSocketLib);
+#endif
 
+
+#ifdef SPDLOG_TEST
 	if (pLog)
 	{
 		pLog->CreateLogFile();
@@ -181,6 +189,13 @@ int test()
 		pLog->info("Support for floats {:03.2f}", 1.23456);
 		pLog->info("Positional args are {%s} {%s}..", "too", "supported");
 		pLog->info("{:<30}", "left aligned");
+	}
+#endif
+
+#ifdef SOCKET_TEST
+	if (pSocket)
+	{
+		pLog->info("socket plugin create sucessfully");
 	}
 #endif
 
