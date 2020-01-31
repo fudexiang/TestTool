@@ -6,7 +6,10 @@
 #include <LogLib/ILogLib.h>
 
 #include "spdlog/spdlog.h"
+#include "spdlog/sinks/stdout_sinks.h"
+#include "spdlog/sinks/file_sinks.h"
 
+#define MSG_MAX_LEN	0x100
 
 class CLogLib: public ILogLib
 {
@@ -18,9 +21,24 @@ protected:
 	CLogLib();
 	virtual ~CLogLib();
 public:
-	std::shared_ptr<spdlog::logger> plog;
-	char LogBuff[100];
+	std::shared_ptr<spdlog::logger> pFileLog;
+	std::shared_ptr<spdlog::logger> pConsoleLog;
+
+	char LogBuff[MSG_MAX_LEN];
+	int day;
+	int hour;
+	int min;
+	int sec;
+	int file_count;
+
 	virtual CodeRet_t CreateLogFile(void);
+	virtual CodeRet_t SaveLogFile(void);
+	virtual CodeRet_t trace(const char* fmt, ...) const;
+	virtual CodeRet_t debug(const char* fmt, ...) const;
+	virtual CodeRet_t info(const char* fmt, ...) const;
+	virtual CodeRet_t warn(const char* fmt, ...) const;
+	virtual CodeRet_t error(const char* fmt, ...) const;
+	virtual CodeRet_t critical(const char* fmt, ...) const;
 };
 
 #endif

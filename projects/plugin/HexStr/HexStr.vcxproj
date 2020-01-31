@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\plugin\HexStr\HexStr.cpp" />
+    <ClCompile Include="..\..\..\source\plugin\HexStr\module.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\interface\HexStr\IHexStr.h" />

@@ -25,8 +25,8 @@ int CComLib::SerialPortOpen(char *String_Device_File_Name, unsigned int Baud_Rat
 	//sprintf(String_Full_Device_Name, "\\\\.\\%s", String_Device_File_Name);
 
 	// Open the serial port and set all access rights
-	COM_Handle = CreateFile((LPCSTR) String_Device_File_Name, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-	//COM_Handle = CreateFile(L"COM3", GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	//COM_Handle = CreateFile((LPCSTR) String_Device_File_Name, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	COM_Handle = CreateFile(L"COM1", GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (COM_Handle == INVALID_HANDLE_VALUE) return -1; // Error : can't access to the serial port
 
 													   // Configure port

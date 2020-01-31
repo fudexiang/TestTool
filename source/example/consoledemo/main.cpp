@@ -4,16 +4,15 @@
 #include <thread>
 
 
-//#define SPDLOG_TEST
+#define SPDLOG_TEST
 //#define CRC_TEST1
-#define CRC_TEST2
+//#define CRC_TEST2
 //#define UART_TEST
 
 #include <stdio.h>
 #include "Loglib\ILogLib.h"
 #include "Comlib\IComLib.h"
-
-
+#include "HexStr\IHexStr.h"
 
 #ifdef CRC_TEST
 typedef struct
@@ -167,6 +166,24 @@ int test()
 {
 	uint16_t ret1= 0x12, ret2 = 0x21;
 
+#ifdef SPDLOG_TEST
+	x3::Object<ILogLib> pLog(clsidLogLib);
+
+	if (pLog)
+	{
+		pLog->CreateLogFile();
+		pLog->info("Welcome to spdlog!");
+		pLog->error("Some error message with arg{}..", 1);
+		pLog->warn("Easy padding in numbers like {:08%d}", 12);
+		pLog->SaveLogFile();
+		pLog->CreateLogFile();
+		pLog->critical("Support for int: {0:d};  hex: {0:x};  oct: {0:o}; bin: {0:b}", 42);
+		pLog->info("Support for floats {:03.2f}", 1.23456);
+		pLog->info("Positional args are {%s} {%s}..", "too", "supported");
+		pLog->info("{:<30}", "left aligned");
+	}
+#endif
+
 #ifdef CRC_TEST
 	uint8_t Buff[9] = { 0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39 };
 	uint8_t i = 0;
@@ -188,18 +205,8 @@ int test()
 	ret2 = ComTp_Calculate16BitCRC(0xFFFF, 0x1021, Buff, 10,1);
 #endif
 
-#ifdef SPDLOG_TEST
-	x3::Object<ILogLib> pLog(clsidLogLib);
-	if (pLog)
-	{
-		pLog->CreateLogFile();
-	}
-	
-#endif
-
 #ifdef UART_TEST
 
-	x3::Object<IComLib> pComm(clsidComLib);
 	TSerialPortID MySerialPort;
 	uint8_t SendBuff[] = { 0x02, 0x01, 0xA0, 0x01, 0xFF, 0x04, 0x00, 0x1D, 0x00, 0x00, 0x00, 0x10, 0x50, 0x03 };
 	uint8_t ReceBuff[100];

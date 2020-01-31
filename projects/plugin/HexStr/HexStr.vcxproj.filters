@@ -18,6 +18,9 @@
     <ClCompile Include="..\..\..\source\plugin\HexStr\HexStr.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\source\plugin\HexStr\module.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\interface\HexStr\IHexStr.h">
