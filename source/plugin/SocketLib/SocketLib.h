@@ -15,7 +15,7 @@ protected:
 	CSocketLib();
 	virtual ~CSocketLib();
 public:
-#if 0
+
 	virtual CodeRet_t InitSocketServer(SOCKET* pSocket);
 
 	virtual CodeRet_t InitSocketClient(SOCKET* pSocket);
@@ -24,7 +24,7 @@ public:
 
 	virtual int SocketLib_Rece(char* pbuffer, int size, SOCKET* pSocket);
 	virtual int SocketLib_Send(char* pbuffer, int size, SOCKET* pSocket);
-#endif
+
 };
 
 #endif

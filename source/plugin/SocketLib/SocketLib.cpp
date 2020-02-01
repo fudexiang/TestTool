@@ -1,7 +1,7 @@
 #include <module/plugininc.h>		/* important */
 #include "SocketLib.h"
 
-//#pragma comment(lib,"ws2_32.lib")
+#pragma comment(lib,"ws2_32.lib")
 
 CSocketLib::CSocketLib()
 {
@@ -12,7 +12,7 @@ CSocketLib::~CSocketLib()
 {
 
 }
-#if 0
+
 CodeRet_t CSocketLib::InitSocketServer(SOCKET *pSocket)
 {
 	WSADATA data;
@@ -72,4 +72,3 @@ int CSocketLib::SocketLib_Send(char* pbuffer, int size, SOCKET* pSocket)
 	send(*pSocket, pbuffer, size, 0);
 	return 0;
 }
-#endif
