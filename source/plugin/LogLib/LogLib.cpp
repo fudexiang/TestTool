@@ -172,3 +172,19 @@ CodeRet_t CLogLib::critical(const char* fmt, ...) const
 	pConsoleLog->critical(LogBuff);
 	return RET_OK;
 }
+
+#ifdef SPDLOG_TEST
+if (pLog)
+{
+	pLog->CreateLogFile();
+	pLog->info("Welcome to spdlog!");
+	pLog->error("Some error message with arg{}..", 1);
+	pLog->warn("Easy padding in numbers like {:08%d}", 12);
+	pLog->SaveLogFile();
+	pLog->CreateLogFile();
+	pLog->critical("Support for int: {0:d};  hex: {0:x};  oct: {0:o}; bin: {0:b}", 42);
+	pLog->info("Support for floats {:03.2f}", 1.23456);
+	pLog->info("Positional args are {%s} {%s}..", "too", "supported");
+	pLog->info("{:<30}", "left aligned");
+}
+#endif

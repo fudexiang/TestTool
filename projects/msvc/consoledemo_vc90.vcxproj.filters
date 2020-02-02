@@ -9,5 +9,11 @@
     <ClCompile Include="..\..\source\example\consoledemo\main.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\example\consoledemo\audio_demo_test.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\example\consoledemo\Interfaces.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

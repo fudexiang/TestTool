@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29418.71
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "core", "core", "{F0BDC993-78C0-4872-928F-191F6485E8D6}"
 EndProject
@@ -19,6 +19,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HexStr", "plugin\HexStr\HexStr.vcxproj", "{17D6F6D0-D616-4EA6-A109-05CAA0AA98B4}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SocketLib", "plugin\SocketLib\SocketLib.vcxproj", "{6FE15F85-B636-449A-8F13-ABFD48F9E655}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CrcLib", "plugin\CrcLib\CrcLib.vcxproj", "{3C0FFEC9-4482-4A90-B14C-FC6ACC932C61}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -76,6 +78,14 @@ Global
 		{6FE15F85-B636-449A-8F13-ABFD48F9E655}.Release|Win32.Build.0 = Release|Win32
 		{6FE15F85-B636-449A-8F13-ABFD48F9E655}.Release|x64.ActiveCfg = Release|x64
 		{6FE15F85-B636-449A-8F13-ABFD48F9E655}.Release|x64.Build.0 = Release|x64
+		{3C0FFEC9-4482-4A90-B14C-FC6ACC932C61}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3C0FFEC9-4482-4A90-B14C-FC6ACC932C61}.Debug|Win32.Build.0 = Debug|Win32
+		{3C0FFEC9-4482-4A90-B14C-FC6ACC932C61}.Debug|x64.ActiveCfg = Debug|x64
+		{3C0FFEC9-4482-4A90-B14C-FC6ACC932C61}.Debug|x64.Build.0 = Debug|x64
+		{3C0FFEC9-4482-4A90-B14C-FC6ACC932C61}.Release|Win32.ActiveCfg = Release|Win32
+		{3C0FFEC9-4482-4A90-B14C-FC6ACC932C61}.Release|Win32.Build.0 = Release|Win32
+		{3C0FFEC9-4482-4A90-B14C-FC6ACC932C61}.Release|x64.ActiveCfg = Release|x64
+		{3C0FFEC9-4482-4A90-B14C-FC6ACC932C61}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -87,6 +97,7 @@ Global
 		{91FAD3A0-4414-45DD-AFC8-D765FE4310E3} = {2AB3FC9D-57B1-4CE5-9CF5-A84E2EBF83C8}
 		{17D6F6D0-D616-4EA6-A109-05CAA0AA98B4} = {2AB3FC9D-57B1-4CE5-9CF5-A84E2EBF83C8}
 		{6FE15F85-B636-449A-8F13-ABFD48F9E655} = {2AB3FC9D-57B1-4CE5-9CF5-A84E2EBF83C8}
+		{3C0FFEC9-4482-4A90-B14C-FC6ACC932C61} = {2AB3FC9D-57B1-4CE5-9CF5-A84E2EBF83C8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EBA01010-3108-457B-8694-513FBA2A1F0D}

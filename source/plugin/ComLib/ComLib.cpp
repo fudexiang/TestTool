@@ -11,6 +11,34 @@ CComLib::~CComLib()
 	
 }
 
+
+#ifdef UART_TEST
+
+TSerialPortID MySerialPort;
+uint8_t SendBuff[] = { 0x02, 0x01, 0xA0, 0x01, 0xFF, 0x04, 0x00, 0x1D, 0x00, 0x00, 0x00, 0x10, 0x50, 0x03 };
+uint8_t ReceBuff[100];
+
+if (pComm)
+{
+	if (0 == pComm->SerialPortOpen((char *)L"COM3", 9600, &MySerialPort))
+	{
+		pComm->SerialPortWriteBuffer(MySerialPort, SendBuff, 14);
+		pComm->SerialPortReadBuffer(MySerialPort, ReceBuff, 16);
+		pComm->SerialPortClose(MySerialPort);
+	}
+	else
+	{
+		printf("open_error[%x][%x]\n", ret1, ret2);
+	}
+}
+
+
+//std::thread UARTThread(&Uart_Thread, pComm);
+
+//UARTThread.join();
+
+#endif
+
 //-------------------------------------------------------------------------------------------------
 // Public functions
 //-------------------------------------------------------------------------------------------------
