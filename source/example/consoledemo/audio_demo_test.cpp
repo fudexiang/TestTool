@@ -199,7 +199,7 @@ void wave_file_analysis(void)
 	LogPrintf(log_info, "buffer size0 = %d\n", buffer_size);
 }
 
-void Audio_Demo_Test(void)
+void Audio_Demo_Test(Threads_Control_t *pControl)
 {
 	uint32_t rate, i, ret;
 	char ServerAddr[] = "192.168.1.5";
@@ -251,6 +251,16 @@ void Audio_Demo_Test(void)
 
 			while (1)
 			{
+				if (FUNC_ENABLE == pControl->exit_flag)
+				{
+					LogPrintf(log_info, "exit audio play\n");
+					break;
+				}
+
+				while (FUNC_ENABLE == pControl->pause_flag)
+				{
+					Sleep(1);
+				}
 
 				readlen = EXPECT_AUDIO_SEND_SIZE_IN_ONE_PACKAGE - HEAD_SIZE - END_SIZE;
 
@@ -327,5 +337,6 @@ void Audio_Demo_Test(void)
 	{
 		LogPrintf(log_critical,"Socket client connect failed");
 	}
-	
+
+	TCPIP_CloseSocket(&gTest_config.SocketPluginObject);
 }

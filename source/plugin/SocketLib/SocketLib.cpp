@@ -72,3 +72,12 @@ int CSocketLib::SocketLib_Send(char* pbuffer, int size, SOCKET* pSocket)
 	send(*pSocket, pbuffer, size, 0);
 	return 0;
 }
+
+CodeRet_t CSocketLib::SocketLib_Close(SOCKET* pSocket)
+{
+	if ((NULL != pSocket) && (NULL != *pSocket))
+	{
+		closesocket(*pSocket);
+	}
+	return RET_OK;
+}

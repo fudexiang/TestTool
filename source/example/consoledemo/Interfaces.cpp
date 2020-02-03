@@ -27,7 +27,7 @@ void UnLoadPlugins(void)
 	x3::unloadScanPlugins();
 }
 
-void *CreatePlugin(PluginType type, const char *name)
+void *CreatePlugin(PluginType_t type, const char *name)
 {
 	void *ret = NULL;
 	switch (type)
@@ -119,4 +119,9 @@ int TCPIP_SocketClientSend(char* pbuffer, int size, SocktPlugin_t *pConfig)
 {
 	(*(x3::Object<ISocketLib> *)(pConfig->pAudioSocketPluginObject))->SocketLib_Send(pbuffer, size, &(pConfig->Socket));
 	return 0;
+}
+
+void TCPIP_CloseSocket(SocktPlugin_t *pConfig)
+{
+	(*(x3::Object<ISocketLib> *)(pConfig->pAudioSocketPluginObject))->SocketLib_Close(&(pConfig->Socket));
 }

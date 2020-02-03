@@ -252,7 +252,7 @@ static int hw_configruation(uint16_t slave,
 	return 0;
 }
 
-void Audio_Register_Tool_Test(void)
+void Audio_Register_Tool_Test(Threads_Control_t *pControl)
 {
 	uint32_t rate, i, ret;
 	char ServerAddr[] = "192.168.1.5";
@@ -349,4 +349,6 @@ void Audio_Register_Tool_Test(void)
 	{
 		LogPrintf(log_critical, "Socket client connect failed");
 	}
+
+	TCPIP_CloseSocket(&gTest_config.SocketPluginObject);
 }
