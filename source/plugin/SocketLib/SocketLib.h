@@ -25,7 +25,7 @@ public:
 	virtual int SocketLib_Rece(char* pbuffer, int size, SOCKET* pSocket);
 	virtual int SocketLib_Send(char* pbuffer, int size, SOCKET* pSocket);
 	virtual CodeRet_t SocketLib_Close(SOCKET* pSocket);
-
+	virtual CodeRet_t SocketLib_GetIP(const char* URL, const char* pIP);
 };
 
 #endif

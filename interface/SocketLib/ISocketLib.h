@@ -22,7 +22,7 @@ class ISocketLib : public x3::IObject
 	virtual int SocketLib_Rece(char* pbuffer, int size, SOCKET* pSocket) = 0;
 	virtual int SocketLib_Send(char* pbuffer, int size, SOCKET* pSocket) = 0;
 	virtual CodeRet_t SocketLib_Close(SOCKET* pSocket) = 0;
-
+	virtual CodeRet_t SocketLib_GetIP(const char* URL, const char* pIP) = 0;
 };
 
 

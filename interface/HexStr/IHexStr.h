@@ -15,6 +15,7 @@ const uint32_t DISPLAY_MAX_ADDRESS = 0x1000000;
 const uint32_t DISPLAY_ERASE_BLOCK  = 512;
 const uint32_t DISPLAY_WR_BLOCK = 64;
 
+
 typedef struct
 {
 	uint32_t max_code_address;
@@ -42,6 +43,10 @@ class IHexStr : public x3::IObject
 	virtual CodeRet_t Hex2BinGenerate(void *pInfo) = 0;
 
 	virtual CodeRet_t S19ToBinGenerate(void *pInfo) = 0;
+
+	virtual int UnicodeToUTF8_Values(char *pText, Unicode_Size_t uint_size,char *pBuffer,int buffer_len) = 0;
+
+	virtual int HexToStr(uint8_t val, char* pBuffer, Case_type_t type) = 0;
 };
 
 

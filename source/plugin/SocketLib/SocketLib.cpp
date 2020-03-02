@@ -81,3 +81,19 @@ CodeRet_t CSocketLib::SocketLib_Close(SOCKET* pSocket)
 	}
 	return RET_OK;
 }
+
+CodeRet_t CSocketLib::SocketLib_GetIP(const char* URL, const char* pIP)
+{
+	WSADATA wsaData;
+	const char* pIPAddr;
+
+	WSAStartup(MAKEWORD(2, 2), &wsaData);
+
+	struct hostent* host = gethostbyname(URL);
+
+	pIPAddr = inet_ntoa(*(struct in_addr*)host->h_addr_list[0]);
+
+	memcpy((void *)pIP, pIPAddr, strlen(pIPAddr));
+
+	return RET_OK;
+}

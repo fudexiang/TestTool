@@ -202,7 +202,7 @@ void wave_file_analysis(void)
 void Audio_Demo_Test(Threads_Control_t *pControl)
 {
 	uint32_t rate, i, ret;
-	char ServerAddr[] = "192.168.1.5";
+	char ServerAddr[] = AUDIO_SERVER_ADDR;
 	int total_count, current_count = 0;
 	uint32_t audio_data_end_pos, audio_data_start_pos;
 	int total_size = 0, readlen = 0, sendlen = 0, count = 0, file_read_size = 0;
@@ -260,6 +260,11 @@ void Audio_Demo_Test(Threads_Control_t *pControl)
 				while (FUNC_ENABLE == pControl->pause_flag)
 				{
 					Sleep(1);
+					if (FUNC_ENABLE == pControl->exit_flag)
+					{
+						LogPrintf(log_info, "exit audio play\n");
+						break;
+					}
 				}
 
 				readlen = EXPECT_AUDIO_SEND_SIZE_IN_ONE_PACKAGE - HEAD_SIZE - END_SIZE;

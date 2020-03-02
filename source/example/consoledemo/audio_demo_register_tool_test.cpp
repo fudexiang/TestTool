@@ -8,8 +8,6 @@
 #define REGISTER_TOOL_WR_REG_MSG_LEN		(REGISTER_TOOL_HEADER_SIZE+20)
 #define REGISTER_TOOL_READ_CONFIG_MSG_LEN	(REGISTER_TOOL_HEADER_SIZE+8)
 
-#define LEFT_CHANNEL_ADDR 0x34
-#define RIGHT_CHANNEL_ADDR 0x35
 
 enum
 {
@@ -255,7 +253,7 @@ static int hw_configruation(uint16_t slave,
 void Audio_Register_Tool_Test(Threads_Control_t *pControl)
 {
 	uint32_t rate, i, ret;
-	char ServerAddr[] = "192.168.1.5";
+	char ServerAddr[] = AUDIO_SERVER_ADDR;
 	int total_count, current_count = 0;
 	uint32_t audio_data_end_pos, audio_data_start_pos;
 	int total_size = 0, readlen = 0, sendlen = 0, count = 0, file_read_size = 0;
@@ -270,7 +268,7 @@ void Audio_Register_Tool_Test(Threads_Control_t *pControl)
 	{
 		while (1)
 		{
-			printf("please input command:\n");
+			printf("->please input command 1:\n");
 
 			scanf("%s", gBuffer);
 
@@ -340,7 +338,11 @@ void Audio_Register_Tool_Test(Threads_Control_t *pControl)
 			case 'R':
 				//get_capture_data_flag = 1;
 				break;
-
+			case 'q':
+			case 'Q':
+				TCPIP_CloseSocket(&gTest_config.SocketPluginObject);
+				return;
+				break;
 			}
 
 		}

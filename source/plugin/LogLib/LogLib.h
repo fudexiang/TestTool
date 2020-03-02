@@ -9,7 +9,7 @@
 #include "spdlog/sinks/stdout_sinks.h"
 #include "spdlog/sinks/file_sinks.h"
 
-#define MSG_MAX_LEN	0x100
+#define MSG_MAX_LEN	0x1000
 
 class CLogLib: public ILogLib
 {

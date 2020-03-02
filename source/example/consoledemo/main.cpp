@@ -3,16 +3,20 @@
 
 extern void Audio_Demo_Test(Threads_Control_t *pControl);
 extern void Audio_Register_Tool_Test(Threads_Control_t *pControl);
+extern void MyWebtest(void);
 
+//#define PLAY_MUSIC
 
 DWORD WINAPI ThreadFunc(LPVOID p)
 {
 	Threads_Control_t *pControl = (Threads_Control_t *)p;
 
-#if 1
-	Audio_Demo_Test(pControl);
+	MyWebtest();
+
+#ifdef PLAY_MUSIC
+	//Audio_Demo_Test(pControl);
 #else
-	Audio_Register_Tool_Test();
+	//Audio_Register_Tool_Test(pControl);
 #endif
 
 	pControl->Thread_count -= 1;
@@ -37,7 +41,10 @@ int main()
 
 	while (thread_control.Thread_count > 0)
 	{
-		printf("please input command:\n");
+		Sleep(1);
+
+#ifdef PLAY_MUSIC
+		printf("please input command 0:\n");
 
 		scanf("%s", buffer);
 
@@ -60,6 +67,21 @@ int main()
 			thread_control.pause_flag = FUNC_DISABLE;
 			break;
 		}
+#else
+		printf("please q or Q to exit\n");
+
+		scanf("%s", buffer);
+
+		if (buffer[0] == 'q' || buffer[0] == 'Q')
+		{
+			while (thread_control.Thread_count > 0)
+			{
+				Sleep(1);
+			}
+			break;
+		}
+
+#endif
 	}
 
 	UnLoadPlugins();

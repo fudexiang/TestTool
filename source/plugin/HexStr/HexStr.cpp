@@ -48,6 +48,89 @@ static int get_word(unsigned char *s)
 	return get_byte(s) * 256 + get_byte(s + 2);
 }
 
+static char get_char(uint8_t val, Case_type_t type)
+{
+	if (val < 0xa)
+	{
+		return '0' + val;
+	}
+	else
+	{
+		if (LOWER_CASE == type)
+		{
+			return 'a' + (val - 10);
+		}
+		else
+		{
+			return 'A' + (val - 10);
+		}
+	}
+}
+
+int CHexStr::HexToStr(uint8_t val, char* pBuffer, Case_type_t type)
+{
+	pBuffer[0] = get_char(val >> 4, type);
+	pBuffer[1] = get_char(val & 0xf, type);
+
+	return 2;
+}
+
+/*
+U-00000000 - U-0000007F: 0xxxxxxx (not implemented)
+U-00000080 - U-000007FF: 110xxxxx 10xxxxxx (not implemented)
+U-00000800 - U-0000FFFF: 1110xxxx 10xxxxxx 10xxxxxx
+U-00010000 - U-001FFFFF: 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx(not implemented)
+U-00200000 - U-03FFFFFF: 111110xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx(not implemented)
+U-04000000 - U-7FFFFFFF: 1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx(not implemented)
+*/
+static int UnicodeToUTF8_SingleValues(char* pText, Unicode_Size_t uint_size, char* pBuffer)
+{
+	int ret = 0;
+	uint16_t UncodeValues;
+	UncodeValues = pText[0];
+	UncodeValues = UncodeValues << 8;
+	UncodeValues |= pText[1];
+
+	if (UNICODE_TWO_BYTE == uint_size)
+	{
+		pBuffer[0] = 0xE0;
+		pBuffer[1] = 0x80;
+		pBuffer[2] = 0x80;
+
+		pBuffer[0] |= (UncodeValues >> 12) & 0xf;
+		pBuffer[1] |= (UncodeValues >> 6) & 0x3f;
+		pBuffer[2] |= (UncodeValues >> 0) & 0x3f;
+
+		ret = 3;
+	}
+	
+	return ret;
+}
+
+int CHexStr::UnicodeToUTF8_Values(char* pText, Unicode_Size_t uint_size, char *pBuffer, int buffer_len)
+{
+	int len = 0,offset = 0;
+	char* pIn;
+	char* pOut;
+
+	while ('\0' != pText[len])
+	{
+		pIn = &pText[len];
+		pOut = &pBuffer[offset];
+
+		offset += UnicodeToUTF8_SingleValues(pIn, uint_size, pOut);
+
+		if(uint_size == UNICODE_TWO_BYTE)
+			len+=2;
+
+		if (offset >= buffer_len)
+		{
+			break;
+		}
+	}
+
+	return offset;
+}
 CodeRet_t CHexStr::Hex2BinGenerate(void *pInfo)
 {
 	//Info_t *p = (Info_t *)pInfo;

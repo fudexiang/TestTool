@@ -5,6 +5,9 @@
 #include "Common/DataType.h"
 
 #define AUDIO_BUFFER_SIZE 0x10000
+#define AUDIO_SERVER_ADDR "192.168.1.6"
+#define LEFT_CHANNEL_ADDR 0x35
+#define RIGHT_CHANNEL_ADDR 0x36
 
 typedef struct 
 {

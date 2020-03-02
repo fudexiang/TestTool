@@ -34,6 +34,8 @@ public:
 	
 	virtual CodeRet_t Hex2BinGenerate(void *pInfo);
 	virtual CodeRet_t S19ToBinGenerate(void *pInfo);
+	virtual int UnicodeToUTF8_Values(char* pText, Unicode_Size_t uint_size, char *pBuffer, int buffer_len);
+	virtual int HexToStr(uint8_t val, char* pBuffer, Case_type_t type);
 
 };
 

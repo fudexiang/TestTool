@@ -182,9 +182,11 @@
     <ClCompile Include="..\..\source\example\consoledemo\audio_demo_test.cpp" />
     <ClCompile Include="..\..\source\example\consoledemo\Interfaces.cpp" />
     <ClCompile Include="..\..\source\example\consoledemo\main.cpp" />
+    <ClCompile Include="..\..\source\example\consoledemo\test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\example\consoledemo\audio_demo_test.h" />
+    <ClInclude Include="..\..\source\example\consoledemo\Interfaces.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

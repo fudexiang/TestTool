@@ -44,7 +44,7 @@ CodeRet_t CLogLib::CreateLogFile(void)
 		file_count++;
 	}
 
-	sprintf_s(LogBuff, "%d%d%d_%d_%d_%d_%d",t.tm_year+ 1900,t.tm_mon+1,t.tm_mday, t.tm_hour,t.tm_min,t.tm_sec, file_count);
+	sprintf_s(LogBuff, "%04d%02d%02d_%02d_%02d_%02d_%d",t.tm_year+ 1900,t.tm_mon+1,t.tm_mday, t.tm_hour,t.tm_min,t.tm_sec, file_count);
 
 	spdlog::set_pattern("[%Y:%D:%T] %v");
 
