@@ -6,26 +6,20 @@
 #include "Comlib\IComLib.h"
 #include "HexStr\IHexStr.h"
 #include "SocketLib\ISocketLib.h"
-#include "HttpLib/IHttpLib.h"
-
+#include "HttpLib\IHttpLib.h"
+#include "AudioLib\IAudioLib.h"
+#include "FFT\IFFTLib.h"
+#include "FilterLib\IFilterLib.h"
+#include "MKOpeLib\IMKOpeLib.h"
 #include "Interfaces.h"
 
 static x3::Object<ILogLib> *pLocalLog;
 
-#define LOG_FILE_PRINTF(str) (*pLocalLog)->info(str)
+#define LOG_FILE_PRINTF(str) if(pLocalLog){(*pLocalLog)->info(str);}
 
-void LoadPlugins(void)
+CodeRet_t AudioRecordConfig(AudioFormat_t * pFormatConfig, AudioBufferGroup_t * pBufferConfig,void* pPlugin)
 {
-	x3::loadScanPlugins();
-
-	pLocalLog = new x3::Object<ILogLib>(clsidLogLib);
-	(*pLocalLog)->CreateLogFile();
-}
-
-void UnLoadPlugins(void)
-{
-	(*pLocalLog)->SaveLogFile();
-	x3::unloadScanPlugins();
+	return (*(x3::Object<IAudioLib>*)(pPlugin))->PrepareSoundHalConfig(pFormatConfig, pBufferConfig);
 }
 
 void *CreatePlugin(PluginType_t type, const char *name)
@@ -33,6 +27,18 @@ void *CreatePlugin(PluginType_t type, const char *name)
 	void *ret = NULL;
 	switch (type)
 	{
+	case PLUGIN_AUDIO:
+		ret = new x3::Object<IAudioLib>(name);
+
+		break;
+	case PLUGIN_FFT:
+		ret = new x3::Object<IFFTLib>(name);
+
+		break;
+	case PLUGIN_FILTER:
+		ret = new x3::Object<IFilterLib>(name);
+
+		break;
 	case PLUGIN_HEX:
 		ret = new x3::Object<IHexStr>(name);
 
@@ -43,6 +49,10 @@ void *CreatePlugin(PluginType_t type, const char *name)
 		break;
 	case PLUGIN_LOG:
 		ret = new x3::Object<ILogLib>(name);
+
+		break;
+	case PLUGIN_MKOPE:
+		ret = new x3::Object<IMKOpeLib>(name);
 
 		break;
 	case PLUGIN_SOCKET:
@@ -62,6 +72,26 @@ void *CreatePlugin(PluginType_t type, const char *name)
 	}
 
 	return ret;
+}
+
+CodeRet_t CalFFT(complex* pSample, uint32_t size,void* pPlugin)
+{
+	return (*(x3::Object<IFFTLib>*)(pPlugin))->fft(pSample, size);
+}
+
+int GetAudioDeviceName(uint8_t *pText, int len, void* pPlugin)
+{
+	return (*(x3::Object<IAudioLib>*)(pPlugin))->GetSoundInfo((char *)pText, len);
+}
+
+int GetAudioLatestFullSlotNum(void* pPlugin)
+{
+	return (*(x3::Object<IAudioLib>*)(pPlugin))->LatestRecordSlot();
+}
+
+int GetAudioSlotCount(void* pPlugin)
+{
+	return (*(x3::Object<IAudioLib>*)(pPlugin))->RecordSlotCount();
 }
 
 int GetStrAscIIValues(char* pText, Unicode_Size_t uint_size, char* pBuffer, int buffer_len,void* pPlugin)
@@ -84,6 +114,25 @@ void Http_GetContext(const char* pURL, void* pBuffer, uint32_t max_len, void* pP
 void Http_ResContext(void* pPlugin)
 {
 	(*(x3::Object<IHttpLib>*)(pPlugin))->HttpResClear();
+}
+
+void IIR_FilterConfig(FILTERINFO config,void* pPlugin)
+{
+	(*(x3::Object<IFilterLib>*)(pPlugin))->Init_Filter(config.type.type, config.ts,config.type.fl,config.q);
+}
+
+double IIR_FilterCal(double val,void* pPlugin)
+{
+	return (*(x3::Object<IFilterLib>*)(pPlugin))->Filter(val);
+}
+
+void LoadPlugins(void)
+{
+	x3::loadScanPlugins();
+
+	pLocalLog = new x3::Object<ILogLib>(clsidLogLib);
+	(*pLocalLog)->CreateLogFile();
+
 }
 
 void LogPrintf(LogPrintLevel level,const char* fmt, ...)
@@ -116,6 +165,38 @@ void LogPrintf(LogPrintLevel level,const char* fmt, ...)
 		(*pLocalLog)->critical(LogBuff);
 		break;
 	}
+}
+
+void MK_LeftClick(void* pPlugin)
+{
+	(*(x3::Object<IMKOpeLib>*)(pPlugin))->LeftClick();
+}
+void MK_RightClick(void* pPlugin)
+{
+	(*(x3::Object<IMKOpeLib>*)(pPlugin))->RightClick();
+}
+void MK_MoveMouse(int x, int y, void* pPlugin)
+{
+	(*(x3::Object<IMKOpeLib>*)(pPlugin))->MoveMouse(x,y);
+}
+void MK_EnterKey(char ButtonValue, void* pPlugin)
+{
+	(*(x3::Object<IMKOpeLib>*)(pPlugin))->EnterKey(ButtonValue);
+}
+
+void StartAudioRecord(void* pPlugin)
+{
+	return (*(x3::Object<IAudioLib>*)(pPlugin))->StartRecord();
+}
+
+void StopAudioRecord(void* pPlugin)
+{
+	return (*(x3::Object<IAudioLib>*)(pPlugin))->StopRecord();
+}
+
+void CloseAudioRecord(void* pPlugin)
+{
+	return (*(x3::Object<IAudioLib>*)(pPlugin))->StopClose();
 }
 
 CodeRet_t TCPIP_SocketClientConnect(TCPIP_Client_t *pClient,SocktPlugin_t *pConfig)
@@ -162,3 +243,10 @@ void TCPIP_CloseSocket(SocktPlugin_t *pConfig)
 {
 	(*(x3::Object<ISocketLib> *)(pConfig->pAudioSocketPluginObject))->SocketLib_Close(&(pConfig->Socket));
 }
+
+void UnLoadPlugins(void)
+{
+	(*pLocalLog)->SaveLogFile();
+	x3::unloadScanPlugins();
+}
+

@@ -9,56 +9,6 @@
 #define LEFT_CHANNEL_ADDR 0x35
 #define RIGHT_CHANNEL_ADDR 0x36
 
-typedef struct 
-{
-	char	chunk_id[4];
-	uint32_t 	chunk_size;
-	char	format[4];
-
-	char	sub_chunk1_id[4];
-	uint32_t 	sub_chunk1_size;
-
-	uint16_t 	audio_format;
-	uint16_t 	num_channels;
-	uint32_t	sample_rate;
-	uint32_t 	byte_rate;
-	uint16_t	block_align;
-	uint16_t 	bits_per_sample;
-
-	char sub_chunk2_id[4];
-	uint32_t 	sub_chunk2_size;
-} WAV_HEADER;
-
-
-typedef struct {
-	uint32_t magic;		/* 'RIFF' */
-	uint32_t length;		/* filelen */
-	uint32_t type;		/* 'WAVE' */
-} WaveHeader;
-
-typedef struct {
-	uint32_t type;		/* 'data' */
-	uint32_t length;		/* samplecount */
-} WaveChunkHeader;
-
-typedef struct {
-	uint16_t format;		/* see WAV_FMT_* */
-	uint16_t channels;
-	uint32_t sample_fq;	/* frequence of sample */
-	uint32_t byte_p_sec;
-	uint16_t byte_p_spl;	/* samplesize; 1 or 2 bytes */
-	uint16_t bit_p_spl;	/* 8, 12 or 16 bit */
-} WaveFmtBody;
-
-typedef struct {
-	WaveFmtBody format;
-	uint16_t ext_size;
-	uint16_t bit_p_spl;
-	uint32_t channel_mask;
-	uint16_t guid_format;	/* WAV_FMT_* */
-	uint8_t guid_tag[14];	/* WAV_GUID_TAG */
-} WaveFmtExtensibleBody;
-
 #if 1
 #define COMPOSE_ID(a,b,c,d)	((a) | ((b)<<8) | ((c)<<16) | ((d)<<24))
 #define LE_SHORT(v)		(v)

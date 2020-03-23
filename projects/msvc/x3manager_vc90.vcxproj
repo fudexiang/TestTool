@@ -83,8 +83,8 @@
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>..\..\build\$(Configuration)64\plugins\</OutDir>
-    <IntDir>..\..\build\$(Configuration)64\obj\$(ProjectName)\</IntDir>
+    <OutDir>..\..\build\$(Configuration)\plugins\</OutDir>
+    <IntDir>..\..\build\$(Configuration)\obj\$(ProjectName)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
