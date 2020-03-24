@@ -53,6 +53,8 @@ typedef struct
 	int Thread_count;
 	Func_Enable_t pause_flag;
 	Func_Enable_t exit_flag;
+
+	void* pMKPlugin;
 }Threads_Control_t;
 
 extern CodeRet_t AudioRecordConfig(AudioFormat_t* pFormatConfig, AudioBufferGroup_t* pBufferConfig, void* pPlugin);

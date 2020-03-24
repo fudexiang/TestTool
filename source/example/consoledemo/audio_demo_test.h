@@ -5,9 +5,9 @@
 #include "Common/DataType.h"
 
 #define AUDIO_BUFFER_SIZE 0x10000
-#define AUDIO_SERVER_ADDR "192.168.1.6"
-#define LEFT_CHANNEL_ADDR 0x35
-#define RIGHT_CHANNEL_ADDR 0x36
+#define AUDIO_SERVER_ADDR "192.168.10.43"
+#define LEFT_CHANNEL_ADDR 0x34
+#define RIGHT_CHANNEL_ADDR 0x35
 
 #if 1
 #define COMPOSE_ID(a,b,c,d)	((a) | ((b)<<8) | ((c)<<16) | ((d)<<24))

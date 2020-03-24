@@ -146,6 +146,12 @@ typedef struct
 	double y[2];
 }FILTERINFO, * LPFILTERINFO;
 
+typedef struct
+{
+	int x;
+	int y;
+}Point_Location_t;
+
 #endif
 
 #endif

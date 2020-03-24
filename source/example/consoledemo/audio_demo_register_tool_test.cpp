@@ -303,6 +303,32 @@ void Audio_Register_Tool_Test(Threads_Control_t *pControl)
 				}
 
 				TCPIP_SocketClientSend((char*)(&read_config_msg), REGISTER_TOOL_READ_CONFIG_MSG_LEN, &(gTest_config.SocketPluginObject));
+				if ('0' == gBuffer[1])
+				{
+					register_tool_read_reg(LEFT_CHANNEL_ADDR, 0x02);
+					register_tool_read_reg(LEFT_CHANNEL_ADDR, 0x22);
+					register_tool_read_reg(LEFT_CHANNEL_ADDR, 0x23);
+					register_tool_read_reg(LEFT_CHANNEL_ADDR, 0x26);
+					register_tool_read_reg(LEFT_CHANNEL_ADDR, 0x27);
+					register_tool_read_reg(LEFT_CHANNEL_ADDR, 0x61);
+					register_tool_read_reg(LEFT_CHANNEL_ADDR, 0x68);
+
+				}
+				else if ('1' == gBuffer[1])
+				{
+					register_tool_read_reg(RIGHT_CHANNEL_ADDR, 0x02);
+					register_tool_read_reg(RIGHT_CHANNEL_ADDR, 0x22);
+					register_tool_read_reg(RIGHT_CHANNEL_ADDR, 0x23);
+					register_tool_read_reg(RIGHT_CHANNEL_ADDR, 0x26);
+					register_tool_read_reg(RIGHT_CHANNEL_ADDR, 0x27);
+					register_tool_read_reg(RIGHT_CHANNEL_ADDR, 0x61);
+					register_tool_read_reg(RIGHT_CHANNEL_ADDR, 0x68);
+				}
+				else
+				{
+					printf("channel num error[%c]\n", gBuffer[1]);
+				}
+
 				break;
 			case 'o':
 			case 'O':

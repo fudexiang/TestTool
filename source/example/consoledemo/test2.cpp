@@ -9,21 +9,19 @@ void Mytest2(Threads_Control_t* p)
 	POINT mouse_pos;
 
 	pMKPlugin = CreatePlugin(PLUGIN_MKOPE, clsidMKOpeLib);
+	p->pMKPlugin = pMKPlugin;
 
 	while (FUNC_ENABLE != p->exit_flag)
 	{
 		GetCursorPos(&mouse_pos);
 
-		printf("x = %d,y = %d\r\n", mouse_pos.x, mouse_pos.y);
+		printf("mouse pos x = %d,y = %d\r\n", mouse_pos.x, mouse_pos.y);
 
+		Sleep(2000);
 
-		Sleep(1000);
-
-		count++;
-		if (count > 5)
-			break;
 	}
 
+#if 0
 	if (pMKPlugin)
 	{
 		MK_MoveMouse(1466, 34, pMKPlugin);
@@ -53,5 +51,5 @@ void Mytest2(Threads_Control_t* p)
 		MK_MoveMouse(114, 626, pMKPlugin);
 		MK_RightClick(pMKPlugin);
 	}
-
+#endif
 }
