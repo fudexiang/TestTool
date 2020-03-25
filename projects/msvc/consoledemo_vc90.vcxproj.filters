@@ -30,6 +30,9 @@
     <ClCompile Include="..\..\source\example\consoledemo\test1.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\example\consoledemo\test3.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\example\consoledemo\audio_demo_test.h">

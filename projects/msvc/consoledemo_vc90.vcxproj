@@ -53,6 +53,7 @@
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="opencv_release32.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -82,7 +83,7 @@
     <OutDir>..\..\build\$(Configuration)\</OutDir>
     <IntDir>..\..\build\$(Configuration)\obj\$(ProjectName)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>D:\Workspace\Git\AutoManual_PC_Control\source\example\consoledemo\libs\glfw\lib-vc2010-32;E:\Installer\OpenCV\opencv\build\x64\vc15\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>D:\Workspace\Git\AutoManual_PC_Control\source\example\consoledemo\libs\glfw\lib-vc2010-32;E:\Installer\OpenCV\opencv\build\x86\vc16\lib;$(LibraryPath)</LibraryPath>
     <IncludePath>D:\Workspace\Git\AutoManual_PC_Control\source\example\consoledemo\imgui;D:\Workspace\Git\AutoManual_PC_Control\source\example\consoledemo\libs\glfw\include;E:\Installer\OpenCV\opencv\build\include;E:\Installer\OpenCV\opencv\build\include\opencv2;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -151,7 +152,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <ImportLibrary>$(IntDir)$(ProjectName).lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalDependencies>opencv_world420.lib;opencv_world420d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_calib3d420.lib;opencv_core420.lib;opencv_dnn420.lib;opencv_features2d420.lib;opencv_flann420.lib;opencv_gapi420.lib;opencv_highgui420.lib;opencv_imgcodecs420.lib;opencv_imgproc420.lib;opencv_ml420.lib;opencv_objdetect420.lib;opencv_photo420.lib;opencv_stitching420.lib;opencv_video420.lib;opencv_videoio420.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -176,6 +177,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <ImportLibrary>$(IntDir)$(ProjectName).lib</ImportLibrary>
       <TargetMachine>MachineX64</TargetMachine>
+      <AdditionalDependencies>opencv_world420_x64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -187,6 +189,7 @@
     <ClCompile Include="..\..\source\example\consoledemo\test1.cpp" />
     <ClCompile Include="..\..\source\example\consoledemo\test11.cpp" />
     <ClCompile Include="..\..\source\example\consoledemo\test2.cpp" />
+    <ClCompile Include="..\..\source\example\consoledemo\test3.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\example\consoledemo\audio_demo_test.h" />

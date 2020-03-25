@@ -7,6 +7,7 @@
 //#define TEST_0
 #define TEST_1
 #define TEST_2
+//#define TEST_3
 //#define TEST_11
 
 #ifdef PLAY_MUSIC
@@ -21,9 +22,15 @@ extern void MyWebtest(void);
 #ifdef TEST_1
 extern void Mytest1(Threads_Control_t* p);
 #endif
+
 #ifdef TEST_2
 extern void Mytest2(Threads_Control_t *p);
 #endif
+
+#ifdef TEST_3
+extern void Mytest3(Threads_Control_t* p);
+#endif
+
 #ifdef TEST_11
 extern void Mytest11(void);
 #endif
@@ -60,6 +67,10 @@ DWORD WINAPI ThreadFunc2(LPVOID p)
 
 #ifdef TEST_2
 	Mytest2(pControl);
+#endif
+
+#ifdef TEST_3
+	Mytest3(pControl);
 #endif
 
 	pControl->Thread_count -= 1;

@@ -11,11 +11,20 @@ void Mytest2(Threads_Control_t* p)
 	pMKPlugin = CreatePlugin(PLUGIN_MKOPE, clsidMKOpeLib);
 	p->pMKPlugin = pMKPlugin;
 
+	p->MaxAreaValue.x = 0;
+	p->MaxAreaValue.y = 0;
+
 	while (FUNC_ENABLE != p->exit_flag)
 	{
 		GetCursorPos(&mouse_pos);
 
-		printf("mouse pos x = %d,y = %d\r\n", mouse_pos.x, mouse_pos.y);
+		if (p->MaxAreaValue.x < mouse_pos.x)
+			p->MaxAreaValue.x = mouse_pos.x;
+
+		if (p->MaxAreaValue.y < mouse_pos.y)
+			p->MaxAreaValue.y = mouse_pos.y;
+
+		printf("mouse pos x = %d,y = %d[%d][%d]\r\n", (int)mouse_pos.x, (int)mouse_pos.y,p->MaxAreaValue.x, p->MaxAreaValue.y);
 
 		Sleep(2000);
 

@@ -4,19 +4,35 @@
 #include <process.h>
 #include <TCHAR.H>
 
+#include <iostream>
+
 #include "opencv2/opencv.hpp"
 #include "opencv2/imgproc.hpp"
 //#include "opencv2/imgcodecs.hpp"
-//#include "opencv2/highgui.hpp"
-#include <iostream>
+#include "opencv2/highgui.hpp"
 
+using namespace std;
 using namespace cv;
+using namespace cv::cuda;
 
 #define WIN_NAME "video"
 
 //#define CreateWins
 //#define OPENCV_SHOW_IMG
 #define OPENCV_CAMERA_OPE
+//#define OPENCV_OPENGL 
+
+#ifdef OPENCV_OPENGL
+#include <GL/gl.h>
+#include <GL/glu.h>
+
+#include "opencv2/core.hpp"
+#include "opencv2/core/opengl.hpp"
+#include "opencv2/core/cuda.hpp"
+
+#pragma comment(lib,"opengl32.lib")
+#pragma comment(lib, "glu32.lib")
+#endif
 
 #ifdef CreateWins
 #define WM_TEST	WM_USER+1
@@ -154,6 +170,37 @@ void on_mouse(int EVENT, int x, int y, int flags, void* userdata)
 }
 #endif
 
+#ifdef OPENCV_OPENGL
+void on_opengl(void* param)
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+	glLoadIdentity();
+	glTranslated(0.0, 0.0, -1.0);
+	glRotatef(55, 1, 0, 0);
+	glRotatef(45, 0, 1, 0);
+	glRotatef(0, 0, 0, 1);
+	static const int coords[6][4][3] = {
+		{ { +1, -1, -1 }, { -1, -1, -1 }, { -1, +1, -1 }, { +1, +1, -1 } },
+		{ { +1, +1, -1 }, { -1, +1, -1 }, { -1, +1, +1 }, { +1, +1, +1 } },
+		{ { +1, -1, +1 }, { +1, -1, -1 }, { +1, +1, -1 }, { +1, +1, +1 } },
+		{ { -1, -1, -1 }, { -1, -1, +1 }, { -1, +1, +1 }, { -1, +1, -1 } },
+		{ { +1, -1, +1 }, { -1, -1, +1 }, { -1, -1, -1 }, { +1, -1, -1 } },
+		{ { -1, -1, +1 }, { +1, -1, +1 }, { +1, +1, +1 }, { -1, +1, +1 } }
+	};
+	for (int i = 0; i < 6; ++i) 
+	{
+		glColor3ub(i * 20, 100 + i * 10, i * 42);
+		glBegin(GL_QUADS);
+		for (int j = 0; j < 4; ++j) {
+			glVertex3d(0.2 * coords[i][j][0], 0.2 * coords[i][j][1], 0.2 * coords[i][j][2]);
+		}
+		glEnd();
+	}
+	
+}
+#endif
+
 void Mytest1(Threads_Control_t* gpConfig)
 {
 #ifdef OPENCV_SHOW_IMG
@@ -264,11 +311,13 @@ void Mytest1(Threads_Control_t* gpConfig)
 		{
 			for (j = 0; j < original_frame.cols * channel; )
 			{
-				if ((data[j] > 20) || (data[j + 2] < 200)) 
+				if ((data[j] > 20) || (data[j + 2] < 150)) 
 				{
-//					data[j] = 0;
-//					data[j+1] = 0;
-//					data[j+2] = 0;
+#if 1
+					data[j] = 0;
+					data[j+1] = 0;
+					data[j+2] = 0;
+#endif
 				}
 				else
 				{
@@ -291,10 +340,21 @@ void Mytest1(Threads_Control_t* gpConfig)
 #if 1
 
 				//screen:	1500							800
-				//scene:	original_frame.cols(640)		original_frame.rows(480, 60-420)	
+				//scene:	original_frame.cols(640)		original_frame.rows(480, 60-420)
+
 				i = Pos[0].x * 1500 / original_frame.cols;
 				//j = Pos[1].y * 800 / original_frame.rows;
-				j = (Pos[0].y-60) * 800 / (420-60);
+				j = (Pos[0].y - 60) * 800 / (420 - 60);
+
+				if (gpConfig->MaxAreaValue.x > 1500)
+				{
+					i = Pos[0].x * gpConfig->MaxAreaValue.x / original_frame.cols;
+				}
+
+				if (gpConfig->MaxAreaValue.y > 800)
+				{
+					j = (Pos[0].y - 60) * gpConfig->MaxAreaValue.y / (420 - 60);
+				}
 
 				if ((Pos[1].x != i) || (Pos[1].y != j))
 				{
@@ -323,7 +383,7 @@ void Mytest1(Threads_Control_t* gpConfig)
 			}
 			else
 			{
-				printf("pMKPlugin is not ready\r\n");
+				printf("pMKPlugin is not ready,should open #define TEST_2\r\n");
 			}
 		}
 
@@ -371,5 +431,31 @@ void Mytest1(Threads_Control_t* gpConfig)
 	}
 	cap.release();
 	destroyAllWindows();
+#endif
+
+#ifdef OPENCV_OPENGL
+
+	const int win_width = 800;
+	const int win_height = 640;
+
+	namedWindow(WIN_NAME, WINDOW_OPENGL);
+
+	resizeWindow(WIN_NAME, win_width, win_height);
+
+	setOpenGlContext(WIN_NAME);
+
+	setOpenGlDrawCallback(WIN_NAME, on_opengl, NULL);
+
+	cv::updateWindow(WIN_NAME);
+
+	while (FUNC_DISABLE == gpConfig->exit_flag)
+	{
+		if (waitKey(20) > 0)
+			break;
+	}
+
+	setOpenGlDrawCallback(WIN_NAME, 0, 0);
+	destroyAllWindows();
+
 #endif
 }

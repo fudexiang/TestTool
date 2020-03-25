@@ -23,6 +23,7 @@ typedef enum
 	PLUGIN_LOG,
 	PLUGIN_MKOPE,
 	PLUGIN_SOCKET,
+	PLUGIN_SECURE,
 }PluginType_t;
 
 enum LogPrintLevel
@@ -54,6 +55,7 @@ typedef struct
 	Func_Enable_t pause_flag;
 	Func_Enable_t exit_flag;
 
+	Rect_t MaxAreaValue;
 	void* pMKPlugin;
 }Threads_Control_t;
 
@@ -66,6 +68,7 @@ extern int GetAudioLatestFullSlotNum(void* pPlugin);
 extern int GetAudioSlotCount(void* pPlugin);
 extern int GetAudioDeviceName(uint8_t* pText, int len, void* pPlugin);
 extern int GetStrAscIIValues(char* pText, Unicode_Size_t uint_size, char* pBuffer, int buffer_len, void* pPlugin);
+extern int GetMACInfo(uint8_t* pBuffer, uint8_t max, void* pPlugin);
 
 extern void HexToStr(uint8_t val, char* pBuffer, Case_type_t type, void* pPlugin);
 extern void Http_GetContext(const char* pURL, void* pBuffer, uint32_t max_len, void* pPlugin);

@@ -11,6 +11,7 @@
 #include "FFT\IFFTLib.h"
 #include "FilterLib\IFilterLib.h"
 #include "MKOpeLib\IMKOpeLib.h"
+#include "SecureLib\ISecureLib.h"
 #include "Interfaces.h"
 
 static x3::Object<ILogLib> *pLocalLog;
@@ -59,7 +60,9 @@ void *CreatePlugin(PluginType_t type, const char *name)
 		ret = new x3::Object<ISocketLib>(name);
 
 		break;
-
+	case PLUGIN_SECURE:
+		ret = new x3::Object<ISecureLib>(name);
+		break;
 	}
 
 	if (NULL == ret)
@@ -97,6 +100,35 @@ int GetAudioSlotCount(void* pPlugin)
 int GetStrAscIIValues(char* pText, Unicode_Size_t uint_size, char* pBuffer, int buffer_len,void* pPlugin)
 {
 	return (*(x3::Object<IHexStr>*)(pPlugin))->UnicodeToUTF8_Values(pText, uint_size, pBuffer, buffer_len);
+}
+
+int GetMACInfo(uint8_t* pBuffer, uint8_t max, void* pPlugin)
+{
+	int i = 0;
+	CodeRet_t ret;
+	ret = (*(x3::Object<ISecureLib>*)(pPlugin))->GetPCPrivateInfo(pBuffer, max);
+
+	printf("ret = %d\r\n",ret);
+
+	if (RET_OK == ret)
+	{
+		for (i = 0; i < max; i++)
+		{
+			if (NUM_ARRAY_STOP_FLAG == pBuffer[i])
+			{
+				i++;
+				break;
+			}
+			if ('\0' == pBuffer[i])
+			{
+				i++;
+				break;
+			}
+				
+		}
+	}
+
+	return i;
 }
 
 void HexToStr(uint8_t val, char* pBuffer, Case_type_t type, void* pPlugin)
