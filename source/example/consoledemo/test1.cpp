@@ -6,6 +6,8 @@
 
 #include <iostream>
 
+#ifdef _DEBUG
+#else
 #include "opencv2/opencv.hpp"
 #include "opencv2/imgproc.hpp"
 //#include "opencv2/imgcodecs.hpp"
@@ -20,6 +22,8 @@ using namespace cv::cuda;
 //#define CreateWins
 //#define OPENCV_SHOW_IMG
 #define OPENCV_CAMERA_OPE
+	#define MOUSE_MOVE_ON_PAPER
+	//#define MOUSE_MOVE_WITH_RED
 //#define OPENCV_OPENGL 
 
 #ifdef OPENCV_OPENGL
@@ -144,29 +148,97 @@ DWORD WINAPI WinThread(LPVOID pConfig)
 
 #ifdef OPENCV_CAMERA_OPE
 
-#define POS_BK_NUM	10
-Point_Location_t Pos[POS_BK_NUM];
+#define MOUSE_POS_BK_NUM	10
+
+typedef enum
+{
+	INIT_STATUS,
+	CONFIG_STATUS,
+	WORK_STATUS,
+	PAUSE_STATUS,
+	STOP_STATUS,
+}Status_t;
+
+typedef struct
+{
+	Mat *phh;
+	Threads_Control_t* gpConfig;
+
+	Status_t flag;
+	uint8_t count;
+	Point_Location_t ValidArea[2];
+	float A, B;
+}UserData_t;
+
+const int win_width = 800;
+const int win_height = 640;
+const int rgb_channel = 3;
+uint8_t InitData[win_height][win_width * rgb_channel];
+
+static Point_Location_t Mouse_Pos[MOUSE_POS_BK_NUM];
+
+int CalSum[FUNC_NUM_IN_TOTAL];
+int FucPos[FUNC_NUM_IN_TOTAL];
 
 void on_mouse(int EVENT, int x, int y, int flags, void* userdata)
 {
 	Mat hh;
-	hh = *(Mat*)userdata;
+	UserData_t* pInfo = (UserData_t*)userdata;
+	hh = *(pInfo->phh);
 	Point p(x, y);
 
 	switch (EVENT)
 	{
-	case EVENT_LBUTTONDOWN:
+		case EVENT_LBUTTONDOWN:
+		{
+			printf("x = %d,y = %d\r\n", x, y);
+			printf("b=%d\t", hh.at<Vec3b>(p)[0]);
+			printf("g=%d\t", hh.at<Vec3b>(p)[1]);
+			printf("r=%d\n", hh.at<Vec3b>(p)[2]);
+			circle(hh, p, 2, Scalar(255), 3);
+
+			switch (pInfo->flag)
+			{
+			case INIT_STATUS:
+				pInfo->count = 0;
+				pInfo->flag = CONFIG_STATUS;
+			case CONFIG_STATUS:
+				pInfo->ValidArea[pInfo->count].x = x;
+				pInfo->ValidArea[pInfo->count].y = y;
+				pInfo->count++;
+				break;
+			}
+		}
+		break;
+
+	}
+
+}
+
+void adjust_scene_left_right(uchar* pBuffer,int row,int col,int channel,int step)
+{
+	int i,j;
+	uchar temp;
+	uchar* data = pBuffer;
+	for (i = 0; i < row; i++)
 	{
-		printf("x = %d,y = %d\r\n", x, y);
-		printf("b=%d\t", hh.at<Vec3b>(p)[0]);
-		printf("g=%d\t", hh.at<Vec3b>(p)[1]);
-		printf("r=%d\n", hh.at<Vec3b>(p)[2]);
-		circle(hh, p, 2, Scalar(255), 3);
-	}
-	break;
+		for (j = 0; j <= col / 2; j++)
+		{
+			temp = data[j * channel];
+			data[j * channel] = data[(col - 1 - j) * channel];
+			data[(col - 1 - j) * channel] = temp;
 
-	}
+			temp = data[j * channel + 1];
+			data[j * channel + 1] = data[(col - 1 - j) * channel + 1];
+			data[(col - 1 - j) * channel + 1] = temp;
 
+			temp = data[j * channel + 2];
+			data[j * channel + 2] = data[(col - 1 - j) * channel + 2];
+			data[(col - 1 - j) * channel + 2] = temp;
+		}
+
+		data += step;
+	}
 }
 #endif
 
@@ -237,16 +309,21 @@ void Mytest1(Threads_Control_t* gpConfig)
 #endif
 
 #ifdef OPENCV_CAMERA_OPE
-	int i, j,k,channel,count;
+	uchar *pImage,*data, *pInitData = &InitData[0][0];
+	uchar val1, val2, val3;
+	UserData_t info;
 	VideoCapture cap;
+	int i,j,k,channel,count,temp1;
 	Mat original_frame,new_frame;
-
 	new_frame = Mat::zeros(256, 256, CV_8UC3);
 
-	cap.open(0);
+	cap.open(1);
 
 	if (!cap.isOpened())
+	{
+		printf("open camera error\r\n");
 		return;
+	}
 
 	cap.read(original_frame);
 
@@ -260,13 +337,28 @@ void Mytest1(Threads_Control_t* gpConfig)
 #endif
 
 	namedWindow(WIN_NAME, 0);
+
+	resizeWindow(WIN_NAME, win_width, win_height);
 #define ORIGINAL_IMG
 
 #ifdef ORIGINAL_IMG
-	setMouseCallback(WIN_NAME, on_mouse, &original_frame);
+	info.gpConfig = gpConfig;
+	info.phh = &original_frame;
+	info.flag = INIT_STATUS;
+	setMouseCallback(WIN_NAME, on_mouse, &info);
 #else
 	setMouseCallback(WIN_NAME, on_mouse, &new_frame);
 #endif
+
+	cap.read(original_frame);
+
+	channel = original_frame.channels();
+
+	if (rgb_channel != channel)
+	{
+		printf("channel != 3\r\n");
+		return;
+	}
 
 	while (1)
 	{
@@ -274,120 +366,327 @@ void Mytest1(Threads_Control_t* gpConfig)
 		cap.read(original_frame);
 
 #ifdef ORIGINAL_IMG
-#if 1
-		uchar* data = original_frame.data;
-		uchar temp;
-		channel = original_frame.channels();
 
-		if (3 != channel)
-			break;
+		//adjust scene
+		adjust_scene_left_right(original_frame.data, \
+			original_frame.rows, original_frame.cols,\
+			channel, original_frame.step);
 
-		Pos[0].x = 0;
-		Pos[0].y = 0;
-		count = 0;
-
-		for (i = 0; i < original_frame.rows; i++)
+		if (CONFIG_STATUS == info.flag)
 		{
-			for (j = 0; j <= original_frame.cols/2;j++ )
+			if (2 == info.count)
 			{
-				temp = data[j * channel];
-				data[j * channel] = data[(original_frame.cols-1-j) * channel];
-				data[(original_frame.cols - 1 - j) * channel] = temp;
+				printf("----------->x0= %d,y0= %d\r\n", info.ValidArea[0].x, info.ValidArea[0].y);
 
-				temp = data[j * channel + 1];
-				data[j * channel + 1] = data[(original_frame.cols - 1 - j) * channel + 1];
-				data[(original_frame.cols - 1 - j) * channel + 1] = temp;
+				printf("----------->x1= %d,y1= %d\r\n", info.ValidArea[1].x, info.ValidArea[1].y);
 
-				temp = data[j * channel + 2];
-				data[j * channel + 2] = data[(original_frame.cols - 1 - j) * channel + 2];
-				data[(original_frame.cols - 1 - j) * channel + 2] = temp;
+				printf("total points = %d,div into %d pieces\r\n", \
+					20 * (info.ValidArea[1].x - info.ValidArea[0].x) , FUNC_NUM_IN_TOTAL);
+				//y = A*x+B
+				info.A = (float)(info.ValidArea[0].y - info.ValidArea[1].y) / \
+					(info.ValidArea[0].x - info.ValidArea[1].x);
+
+				info.B = info.ValidArea[0].y - info.A * (info.ValidArea[0].x);
+
+				printf("----------->A= %f,B= %f\r\n", info.A, info.B);
+
+#if 1
+				data = original_frame.data;
+				for (i = 0; i < original_frame.rows; i++)
+				{
+					memcpy(&InitData[i][0], data, win_width * rgb_channel);
+
+					data += original_frame.step;
+				}
+#endif
+				temp1 = (info.ValidArea[1].x - info.ValidArea[0].x) / FUNC_NUM_IN_TOTAL;
+				for (i=0;i< FUNC_NUM_IN_TOTAL;i++)
+				{
+					FucPos[i] = info.ValidArea[0].x + i * temp1;
+					printf("----------->Func[%d],pos = %d\r\n", i, FucPos[i]);
+				}
+
+				info.flag = WORK_STATUS;
+			}
+		}
+		else if (WORK_STATUS == info.flag)
+		{
+			Mouse_Pos[0].x = 0;
+			Mouse_Pos[0].y = 0;
+			count = 0;
+
+			data = original_frame.data;
+			for (i = 0; i < FUNC_NUM_IN_TOTAL; i++)
+			{
+				CalSum[i] = 0;
 			}
 
-			data += original_frame.step;
-		}
-
-		data = original_frame.data;
-		for (i = 0; i < original_frame.rows; i++)
-		{
-			for (j = 0; j < original_frame.cols * channel; )
+			for (i = 0; i < original_frame.rows; i++)
 			{
-				if ((data[j] > 20) || (data[j + 2] < 150)) 
+				for (j = 0; j < original_frame.cols * channel; )
+				{
+#ifdef MOUSE_MOVE_ON_PAPER
+
+//test for paint the hit point on the original image
+#if 0
+					if (((j / channel) < info.ValidArea[0].x + 10) && \
+						((j / channel) > info.ValidArea[0].x - 10) && \
+						(i < info.ValidArea[0].y + 10) && \
+						(i > info.ValidArea[0].y - 10)
+						)
+					{
+						data[j] = 0;
+						data[j + 1] = 0;
+						data[j + 2] = 255;
+					}
+					else if (((j / channel) < info.ValidArea[1].x + 10) && \
+						((j / channel) > info.ValidArea[1].x - 10) && \
+						(i < info.ValidArea[1].y + 10) && \
+						(i > info.ValidArea[1].y - 10)
+						)
+					{
+						data[j] = 0;
+						data[j + 1] = 0;
+						data[j + 2] = 255;
+					}
+#endif
+
+//working on the selected area
+#if 1
+					temp1 = info.A * (j / channel) + info.B;
+
+//paint black on the no-select area
+#if 0
+					if (!((i > temp1 - 10) && (i < temp1 + 10)))
+					{
+						//data not in the area
+						data[j] = 0;
+						data[j + 1] = 0;
+						data[j + 2] = 0;
+					}
+#endif
+
+//paint the green edge of selected area
+#if 1
+					//paint the edge of select area
+					//horizon
+					if (((i == ( temp1 - 10)) || \
+						(i == ( temp1 + 10))) && \
+						(j / channel <= info.ValidArea[1].x) && \
+						(j / channel >= info.ValidArea[0].x))
+					{
+						data[j] = 0;
+						data[j + 1] = 255;
+						data[j + 2] = 0;
+					}
+					else if ((i>=(temp1-10)) && (i<=(temp1+10)))		//vertical
+					{
+						if ((j / channel == info.ValidArea[1].x) || \
+							(j / channel == info.ValidArea[0].x))
+						{
+							data[j] = 0;
+							data[j + 1] = 255;
+							data[j + 2] = 0;
+						}
+						else
+						{
+							for (k = 0; k < FUNC_NUM_IN_TOTAL; k++)
+							{
+								if (FucPos[k] == j / channel)
+								{
+									data[j] = 0;
+									data[j + 1] = 255;
+									data[j + 2] = 0;
+								}
+							}
+						}
+					}
+
+#endif
+
+//select area
+#if 1
+					if ((i >= (temp1 - 10)) && \
+						(i <= (temp1 + 10)) && \
+						(j / channel <= info.ValidArea[1].x) && \
+						(j / channel >= info.ValidArea[0].x))
+					{
+						val1 = (data[j] > pInitData[i * original_frame.step + j])? \
+								(data[j] - pInitData[i * original_frame.step + j]): \
+								(pInitData[i * original_frame.step + j] - data[j]);
+
+						val2 = data[j + 1] > pInitData[i * original_frame.step + j + 1] ? \
+								data[j + 1] - pInitData[i * original_frame.step + j + 1]:\
+								pInitData[i * original_frame.step + j + 1] - data[j + 1];
+
+						val3 = data[j + 2] > pInitData[i * original_frame.step + j + 2]?
+								data[j + 2] - pInitData[i * original_frame.step + j + 2]:\
+								pInitData[i * original_frame.step + j + 2] - data[j + 2];
+
+						if ((val1 > 50) || (val2 > 50) || (val3 > 50))
+						{
+#if 0
+							printf("[%d],0x%x,0x%x,0x%x,%d,%d,%d,%d,%d,%d\r\n", j, \
+								val1,val2,val3,
+								data[j], pInitData[i * original_frame.step + j], \
+								data[j + 1], pInitData[i * original_frame.step + j + 1],
+								data[j + 2], pInitData[i * original_frame.step + j + 2]);
+#endif
+							temp1 = j / channel;
+							if (temp1 > FucPos[MOV_RIGHT])
+							{
+								CalSum[MOV_RIGHT]++;
+							}
+							else if (temp1 > FucPos[MOV_DOWN])
+							{
+								CalSum[MOV_DOWN]++;
+							}
+							else if (temp1 > FucPos[MOUSE_CLICK])
+							{
+								CalSum[MOUSE_CLICK]++;
+							}
+							else if (temp1 > FucPos[MOV_UP])
+							{
+								CalSum[MOV_UP]++;
+							}
+							else //MOV_LEFT
+							{
+								CalSum[MOV_LEFT]++;
+							}
+#if 1
+							pInitData[i * original_frame.step + j] = data[j];
+							pInitData[i * original_frame.step + j + 1] = data[j + 1];
+							pInitData[i * original_frame.step + j + 2] = data[j + 2];
+#endif
+							data[j] = 0;
+							data[j+1] = 0;
+							data[j+2] = 255;
+						}
+					}
+#endif
+
+
+#endif
+
+#endif
+
+#ifdef MOUSE_MOVE_WITH_RED
+					//if ((data[j] > 20) || (data[j + 2] < 150)) 
+					if ((data[j] < 200) || (data[j + 2] < 170))
+					{
+#if 1
+						data[j] = 0;
+						data[j + 1] = 0;
+						data[j + 2] = 0;
+#endif
+					}
+					else
+					{
+						Mouse_Pos[0].x += j / channel;
+						Mouse_Pos[0].y += i;
+						count++;
+					}
+#endif
+					j += channel;
+				}
+				data += original_frame.step;
+			}
+
+#ifdef MOUSE_MOVE_ON_PAPER
+			temp1 = MOV_DOWN;
+			if (CalSum[MOV_RIGHT] > CalSum[MOV_DOWN])
+			{
+				temp1 = MOV_RIGHT;
+			}
+			if (CalSum[MOUSE_CLICK] > CalSum[temp1])
+			{
+				temp1 = MOUSE_CLICK;
+			}
+			if (CalSum[MOV_UP] > CalSum[temp1])
+			{
+				temp1 = MOV_UP;
+			}
+			if (CalSum[MOV_LEFT] > CalSum[temp1])
+			{
+				temp1 = MOV_LEFT;
+			}
+			
+			if (CalSum[temp1] > 20*(info.ValidArea[1].x-info.ValidArea[0].x)/ (FUNC_NUM_IN_TOTAL*5))
+			{
+				printf("action is %d,[%d]\r\n", temp1, CalSum[temp1]);
+				for (k = 0; k < FUNC_NUM_IN_TOTAL; k++)
+				{
+					printf("--->%d,[%d]\r\n", k, CalSum[k]);
+				}
+
+				gpConfig->mouse_msg.func = (MOUSE_MESG_FUNC_AREA_t)temp1;
+				gpConfig->mouse_msg.active = FUNC_ENABLE;
+
+			}
+#endif
+
+#ifdef MOUSE_MOVE_WITH_RED
+			//cal the average weight,and paint the mouse
+			if (count)
+			{
+				Mouse_Pos[0].x = Mouse_Pos[0].x / count;
+				Mouse_Pos[0].y = Mouse_Pos[0].y / count;
+
+
+				if (gpConfig->pMKPlugin)
 				{
 #if 1
-					data[j] = 0;
-					data[j+1] = 0;
-					data[j+2] = 0;
+
+					//screen:	1500							800
+					//scene:	original_frame.cols(640)		original_frame.rows(480, 60-420)
+
+					i = Mouse_Pos[0].x * 1500 / original_frame.cols;
+					//j = Pos[1].y * 800 / original_frame.rows;
+					j = (Mouse_Pos[0].y - 60) * 800 / (420 - 60);
+
+					if (gpConfig->MaxAreaValue.x > 1500)
+					{
+						i = Mouse_Pos[0].x * gpConfig->MaxAreaValue.x / original_frame.cols;
+					}
+
+					if (gpConfig->MaxAreaValue.y > 800)
+					{
+						j = (Mouse_Pos[0].y - 60) * gpConfig->MaxAreaValue.y / (420 - 60);
+					}
+
+					if ((Mouse_Pos[1].x != i) || (Mouse_Pos[1].y != j))
+					{
+						for (k = MOUSE_POS_BK_NUM - 1; k > 1; k--)
+						{
+							Mouse_Pos[k].x = Mouse_Pos[k - 1].x;
+							Mouse_Pos[k].y = Mouse_Pos[k - 1].y;
+
+						}
+
+						Mouse_Pos[1].x = i;
+						Mouse_Pos[1].y = j;
+
+						i = 0;
+						j = 0;
+						for (k = 1; k < MOUSE_POS_BK_NUM; k++)
+						{
+							i += Mouse_Pos[k].x;
+							j += Mouse_Pos[k].y;
+						}
+
+						MK_MoveMouse(i / (k - 1), j / (k - 1), gpConfig->pMKPlugin);
+						printf("set %d[%d],%d[%d]\r\n", i, Mouse_Pos[1].x, j, Mouse_Pos[1].y);
+					}
 #endif
 				}
 				else
 				{
-					Pos[0].x += j / channel;
-					Pos[0].y += i;
-					count++;
+					printf("pMKPlugin is not ready,should open #define TEST_2\r\n");
 				}
-				j += channel;
 			}
-			data += original_frame.step;
-		}
-		if (count)
-		{
-			Pos[0].x = Pos[0].x / count;
-			Pos[0].y = Pos[0].y / count;
-
-
-			if (gpConfig->pMKPlugin)
-			{
-#if 1
-
-				//screen:	1500							800
-				//scene:	original_frame.cols(640)		original_frame.rows(480, 60-420)
-
-				i = Pos[0].x * 1500 / original_frame.cols;
-				//j = Pos[1].y * 800 / original_frame.rows;
-				j = (Pos[0].y - 60) * 800 / (420 - 60);
-
-				if (gpConfig->MaxAreaValue.x > 1500)
-				{
-					i = Pos[0].x * gpConfig->MaxAreaValue.x / original_frame.cols;
-				}
-
-				if (gpConfig->MaxAreaValue.y > 800)
-				{
-					j = (Pos[0].y - 60) * gpConfig->MaxAreaValue.y / (420 - 60);
-				}
-
-				if ((Pos[1].x != i) || (Pos[1].y != j))
-				{
-					for (k = POS_BK_NUM - 1; k >1 ; k--)
-					{
-						Pos[k].x = Pos[k - 1].x;
-						Pos[k].y = Pos[k - 1].y;
-
-					}
-
-					Pos[1].x = i;
-					Pos[1].y = j;
-
-					i = 0;
-					j = 0;
-					for (k = 1; k < POS_BK_NUM; k++)
-					{
-						i += Pos[k].x;
-						j += Pos[k].y;
-					}
-
-					MK_MoveMouse(i/(k-1), j/(k-1), gpConfig->pMKPlugin);
-					printf("set %d[%d],%d[%d]\r\n", i, Pos[1].x,j, Pos[1].y);
-				}
 #endif
-			}
-			else
-			{
-				printf("pMKPlugin is not ready,should open #define TEST_2\r\n");
-			}
 		}
 
-#endif
 		imshow(WIN_NAME, original_frame);
 #else
 		/*RGB Img data handle*/
@@ -421,10 +720,8 @@ void Mytest1(Threads_Control_t* gpConfig)
 		imshow(WIN_NAME, new_frame);
 #endif
 
-#if 1
 		if (waitKey(20) > 0)
 			break;
-#endif
 
 		if(FUNC_ENABLE == gpConfig->exit_flag)
 			break;
@@ -434,10 +731,6 @@ void Mytest1(Threads_Control_t* gpConfig)
 #endif
 
 #ifdef OPENCV_OPENGL
-
-	const int win_width = 800;
-	const int win_height = 640;
-
 	namedWindow(WIN_NAME, WINDOW_OPENGL);
 
 	resizeWindow(WIN_NAME, win_width, win_height);
@@ -459,3 +752,4 @@ void Mytest1(Threads_Control_t* gpConfig)
 
 #endif
 }
+#endif

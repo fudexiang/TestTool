@@ -5,7 +5,9 @@
 #include <module/classmacro.h>
 #include <HttpLib/IHttpLib.h>
 
+#ifndef _WIN64
 #include "http.h"
+#endif
 
 class CHttpLib : public IHttpLib
 {
@@ -17,7 +19,9 @@ protected:
 	CHttpLib();
 	virtual ~CHttpLib();
 public:
+#ifndef _WIN64
 	ft_http_client_t* phttp;
+#endif
 	virtual CodeRet_t HttpContext(const char* pURL, void *pText, uint32_t max_len);
 	virtual CodeRet_t HttpResClear(void);
 };

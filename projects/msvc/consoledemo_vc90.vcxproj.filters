@@ -18,9 +18,6 @@
     <ClCompile Include="..\..\source\example\consoledemo\audio_demo_register_tool_test.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\example\consoledemo\test.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\example\consoledemo\test11.cpp">
       <Filter>source</Filter>
     </ClCompile>
@@ -33,12 +30,21 @@
     <ClCompile Include="..\..\source\example\consoledemo\test3.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\example\consoledemo\test10.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\example\consoledemo\was_test.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\example\consoledemo\audio_demo_test.h">
       <Filter>source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\example\consoledemo\Interfaces.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\example\consoledemo\test_config.h">
       <Filter>source</Filter>
     </ClInclude>
   </ItemGroup>

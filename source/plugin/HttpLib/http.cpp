@@ -5,6 +5,8 @@
 #include <string.h>
 #include <stdio.h>
 
+#ifndef _WIN64
+
 #ifdef WIN32
 	#include <WinSock2.h>
 	#ifdef WINCE
@@ -1099,4 +1101,5 @@ HTTP_API int ft_http_set_data_recv_cb(ft_http_client_t* http, data_recv_cb_t cb,
 	}
 	return 0;
 }
+#endif
 

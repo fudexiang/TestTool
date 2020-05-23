@@ -13,7 +13,7 @@ typedef enum
 	FUNC_DISABLE,
 }Func_Enable_t;
 
-typedef enum 
+typedef enum
 {
 	PLUGIN_AUDIO,
 	PLUGIN_FFT,
@@ -24,6 +24,7 @@ typedef enum
 	PLUGIN_MKOPE,
 	PLUGIN_SOCKET,
 	PLUGIN_SECURE,
+	PLUGIN_WASLIB,
 }PluginType_t;
 
 enum LogPrintLevel
@@ -35,6 +36,22 @@ enum LogPrintLevel
 	log_error,
 	log_critical,
 };
+
+typedef enum
+{
+	MOV_LEFT,
+	MOV_UP,
+	MOUSE_CLICK,
+	MOV_DOWN,
+	MOV_RIGHT,
+	FUNC_NUM_IN_TOTAL,
+}MOUSE_MESG_FUNC_AREA_t;
+
+typedef struct
+{
+	MOUSE_MESG_FUNC_AREA_t func;
+	Func_Enable_t active;
+}MouseMsg_t;
 
 typedef struct
 {
@@ -56,6 +73,8 @@ typedef struct
 	Func_Enable_t exit_flag;
 
 	Rect_t MaxAreaValue;
+
+	MouseMsg_t mouse_msg;
 	void* pMKPlugin;
 }Threads_Control_t;
 
@@ -95,6 +114,10 @@ extern int TCPIP_SocketClientSend(char* pbuffer, int size, SocktPlugin_t *pConfi
 extern void TCPIP_SocketGetIP(const char* pURL, const char* pIP, SocktPlugin_t* pConfig);
 extern void TCPIP_CloseSocket(SocktPlugin_t *pConfig);
 extern void UnLoadPlugins(void);
+
+extern CodeRet_t Was_Init(AUDIO_FORMAT_USER_DEFINE_t format, AudioDataInfo_t* pAudioDataInfo, void* pPlugin);
+extern CodeRet_t Was_ReadData(AudioDataInfo_t* pAudioDataInfo, void* pPlugin);
+extern CodeRet_t Was_Exit(void* pPlugin);
 
 //#define URL_PART1 "https://www.sogou.com/tx?query="
 #define URL_PART1	"https://www.so.com/s?ie=utf-8&src=hao_360so_a1004&shb=1&hsid=a571034dfb025d7d&q="

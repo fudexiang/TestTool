@@ -14,5 +14,6 @@ const char* const clsidMKOpeLib =	"60071767-ba6b-4769-9eb4-2ebf469289f0";
 const char* const clsidOpenglGui =	"70071767-ba6b-4769-9eb4-2ebf469289f0";
 const char* const clsidSocketLib =	"80071767-ba6b-4769-9eb4-2ebf469289f0";
 const char* const clsidSecureLib =	"80071767-ba6b-4769-9eb4-2ebf469289f1";
+const char* const clsidWasLib =		"90071767-ba6b-4769-9eb4-2ebf469289f0";
 
 #endif

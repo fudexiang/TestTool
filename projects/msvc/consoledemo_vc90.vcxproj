@@ -23,7 +23,7 @@
     <ProjectGuid>{28C355E1-18E1-4B72-ADB7-3F51D8CAE72A}</ProjectGuid>
     <RootNamespace>consoledemo</RootNamespace>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -39,13 +39,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -75,9 +75,11 @@
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>..\..\build\$(Configuration)64\</OutDir>
-    <IntDir>..\..\build\$(Configuration)64\obj\$(ProjectName)\</IntDir>
+    <OutDir>..\..\build\$(Configuration)\</OutDir>
+    <IntDir>..\..\build\$(Configuration)\obj\$(ProjectName)\</IntDir>
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>E:\Installer\OpenCV\opencv\build\include;E:\Installer\OpenCV\opencv\build\include\opencv2;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\Installer\OpenCV\opencv\build\x64\vc16\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>..\..\build\$(Configuration)\</OutDir>
@@ -117,7 +119,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\source\public;..\..\interface\core;..\..\interface\example;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\source\public;..\..\interface\core;..\..\interface\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -131,6 +133,7 @@
       <SubSystem>Console</SubSystem>
       <ImportLibrary>$(IntDir)$(ProjectName).lib</ImportLibrary>
       <TargetMachine>MachineX64</TargetMachine>
+      <AdditionalDependencies>opencv_world420_x64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -185,15 +188,17 @@
     <ClCompile Include="..\..\source\example\consoledemo\audio_demo_test.cpp" />
     <ClCompile Include="..\..\source\example\consoledemo\Interfaces.cpp" />
     <ClCompile Include="..\..\source\example\consoledemo\main.cpp" />
-    <ClCompile Include="..\..\source\example\consoledemo\test.cpp" />
     <ClCompile Include="..\..\source\example\consoledemo\test1.cpp" />
+    <ClCompile Include="..\..\source\example\consoledemo\test10.cpp" />
     <ClCompile Include="..\..\source\example\consoledemo\test11.cpp" />
     <ClCompile Include="..\..\source\example\consoledemo\test2.cpp" />
     <ClCompile Include="..\..\source\example\consoledemo\test3.cpp" />
+    <ClCompile Include="..\..\source\example\consoledemo\was_test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\example\consoledemo\audio_demo_test.h" />
     <ClInclude Include="..\..\source\example\consoledemo\Interfaces.h" />
+    <ClInclude Include="..\..\source\example\consoledemo\test_config.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

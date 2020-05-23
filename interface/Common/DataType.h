@@ -2,16 +2,38 @@
 #ifndef _DATATYPE_H_
 #define _DATATYPE_H_
 
-
 #include "stdint.h"
 
-enum Unicode_Size_t	{ UNICODE_TWO_BYTE,};
-
-enum CodeRet_t	{ RET_OK , RET_PARAM_ERROR, RET_SIZE_ERROR, RET_ERROR,RET_OVERFLOW};
-
-enum Case_type_t	{CAPTICAL_CASE,LOWER_CASE,};
-
 #define NUM_ARRAY_STOP_FLAG	'*'
+
+typedef enum
+{
+	AUDIO_USER_FORMAT_U8 = 0,
+	AUDIO_USER_FORMAT_S16_BE,
+	AUDIO_USER_FORMAT_S16_LE,
+	AUDIO_USER_FORMAT_S24_3BE,
+	AUDIO_USER_FORMAT_S24_3LE,
+	AUDIO_USER_FORMAT_S24_BE,
+	AUDIO_USER_FORMAT_S24_LE,
+	AUDIO_USER_FORMAT_S32_BE,
+	AUDIO_USER_FORMAT_S32_LE,
+	AUDIO_USER_FORMAT_FLOAT_BE,
+	AUDIO_USER_FORMAT_FLOAT_LE,
+}AUDIO_FORMAT_USER_DEFINE_t;
+
+typedef enum
+{
+	RET_OK , 
+	RET_PARAM_ERROR, 
+	RET_SIZE_ERROR, 
+	RET_ERROR,
+	RET_OVERFLOW
+}CodeRet_t;
+
+typedef enum 	
+{
+	CAPTICAL_CASE,LOWER_CASE,
+}Case_type_t;
 
 typedef enum
 {
@@ -23,6 +45,12 @@ typedef enum
 	STATUS_CLOSED,
 	STATUS_ERROR,
 }Device_Status_t;
+
+typedef enum
+{
+	UNICODE_TWO_BYTE,
+}Unicode_Size_t;
+
 
 //audio plugin
 #define MAX_AUDIO_BUFFER_SLOT_NUM	10
@@ -38,6 +66,16 @@ typedef struct
 	uint8_t buffer_slot_num;
 	AudioBufferSlot_t Slot[MAX_AUDIO_BUFFER_SLOT_NUM];
 }AudioBufferGroup_t;
+
+typedef struct
+{
+	uint8_t* pBuffer;
+	uint32_t buffer_max_len;
+	uint32_t frame_num;
+	uint32_t buffer_valid_size;
+	uint32_t buffer_size_need;
+	uint32_t flags;
+}AudioDataInfo_t;
 
 typedef struct
 {

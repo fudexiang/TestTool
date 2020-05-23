@@ -249,6 +249,38 @@ void Audio_Demo_Test(Threads_Control_t *pControl)
 
 			fseek(fp, audio_data_start_pos, SEEK_SET);
 
+#if 1
+			gBuffer[0] = 'A';
+			gBuffer[1] = 0x1;
+			TCPIP_SocketClientSend(gBuffer, 2, &(gTest_config.SocketPluginObject));
+			ret = TCPIP_SocketClientRece(gBuffer, AUDIO_BUFFER_SIZE, &(gTest_config.SocketPluginObject));
+
+			gBuffer[0] = 'A';
+			gBuffer[1] = 0x4;
+			TCPIP_SocketClientSend(gBuffer, 2, &(gTest_config.SocketPluginObject));
+			ret = TCPIP_SocketClientRece(gBuffer, AUDIO_BUFFER_SIZE, &(gTest_config.SocketPluginObject));
+
+			gBuffer[0] = 'A';
+			gBuffer[1] = 0x06;
+			gBuffer[2] = 0x00;
+			gBuffer[3] = 0x08;
+			gBuffer[4] = 0x55;
+			gBuffer[5] = 0x66;
+			gBuffer[6] = 0x77;
+			gBuffer[7] = 0x88;
+			gBuffer[8] = 0x02;
+			gBuffer[9] = 0x00;
+			gBuffer[10] = 0x00;
+			gBuffer[11] = 0x00;
+			gBuffer[12] = 0x00;
+			gBuffer[13] = 0x00;
+
+			TCPIP_SocketClientSend(gBuffer, 14, &(gTest_config.SocketPluginObject));
+			ret = TCPIP_SocketClientRece(gBuffer, AUDIO_BUFFER_SIZE, &(gTest_config.SocketPluginObject));
+
+			LogPrintf(log_error, "finish algo params configuration \n");
+#endif
+
 			while (1)
 			{
 				if (FUNC_ENABLE == pControl->exit_flag)

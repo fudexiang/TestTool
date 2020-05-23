@@ -12,6 +12,7 @@
 #include "FilterLib\IFilterLib.h"
 #include "MKOpeLib\IMKOpeLib.h"
 #include "SecureLib\ISecureLib.h"
+#include "WasLib\IWasLib.h"
 #include "Interfaces.h"
 
 static x3::Object<ILogLib> *pLocalLog;
@@ -62,6 +63,11 @@ void *CreatePlugin(PluginType_t type, const char *name)
 		break;
 	case PLUGIN_SECURE:
 		ret = new x3::Object<ISecureLib>(name);
+
+		break;
+	case PLUGIN_WASLIB:
+		ret = new x3::Object<IWasLib>(name);
+
 		break;
 	}
 
@@ -281,4 +287,20 @@ void UnLoadPlugins(void)
 	(*pLocalLog)->SaveLogFile();
 	x3::unloadScanPlugins();
 }
+
+CodeRet_t Was_Init(AUDIO_FORMAT_USER_DEFINE_t format, AudioDataInfo_t* pAudioDataInfo, void* pPlugin)
+{
+	return (*(x3::Object<IWasLib>*)(pPlugin))->WasLib_Init(format, pAudioDataInfo);
+}
+
+CodeRet_t Was_ReadData(AudioDataInfo_t* pAudioDataInfo, void* pPlugin)
+{
+	return (*(x3::Object<IWasLib>*)(pPlugin))->WasLib_ReadData(pAudioDataInfo);
+}
+
+CodeRet_t Was_Exit(void* pPlugin)
+{
+	return (*(x3::Object<IWasLib>*)(pPlugin))->WasLib_Exit();
+}
+
 

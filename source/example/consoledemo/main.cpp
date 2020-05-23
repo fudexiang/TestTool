@@ -1,46 +1,11 @@
 #include "stdio.h"
 #include "Interfaces.h"
 
-#define END_APP_BY_Q
-//#define PLAY_MUSIC
-//#define REGISTER_TOOL
-//#define TEST_0
-#define TEST_1
-#define TEST_2
-//#define TEST_3
-//#define TEST_11
-
-#ifdef PLAY_MUSIC
-extern void Audio_Demo_Test(Threads_Control_t *pControl);
-#endif
-#ifdef REGISTER_TOOL
-extern void Audio_Register_Tool_Test(Threads_Control_t *pControl);
-#endif
-#ifdef TEST_0
-extern void MyWebtest(void);
-#endif
-#ifdef TEST_1
-extern void Mytest1(Threads_Control_t* p);
-#endif
-
-#ifdef TEST_2
-extern void Mytest2(Threads_Control_t *p);
-#endif
-
-#ifdef TEST_3
-extern void Mytest3(Threads_Control_t* p);
-#endif
-
-#ifdef TEST_11
-extern void Mytest11(void);
-#endif
+#include "test_config.h"
 
 DWORD WINAPI ThreadFunc1(LPVOID p)
 {
 	Threads_Control_t *pControl = (Threads_Control_t *)p;
-#if TEST_0
-	MyWebtest();
-#endif
 
 #ifdef TEST_1
 	Mytest1(pControl);
@@ -54,9 +19,18 @@ DWORD WINAPI ThreadFunc1(LPVOID p)
 	Audio_Register_Tool_Test(pControl);
 #endif
 
+#if TEST_10
+	MyWebtest();
+#endif
+
 #ifdef TEST_11
 	Mytest11();
 #endif
+
+#ifdef AUDIO_PLAYER_CAPTURE
+	WasTest(pControl);
+#endif
+
 	pControl->Thread_count -= 1;
 	return 0;
 }
