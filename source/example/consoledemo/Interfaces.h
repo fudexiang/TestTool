@@ -39,6 +39,7 @@ enum LogPrintLevel
 
 typedef enum
 {
+	KEY_ENTER,
 	MOV_LEFT,
 	MOV_UP,
 	MOUSE_CLICK,
@@ -75,6 +76,7 @@ typedef struct
 	Rect_t MaxAreaValue;
 
 	MouseMsg_t mouse_msg;
+	char key_val;
 	void* pMKPlugin;
 }Threads_Control_t;
 
@@ -88,8 +90,12 @@ extern int GetAudioSlotCount(void* pPlugin);
 extern int GetAudioDeviceName(uint8_t* pText, int len, void* pPlugin);
 extern int GetStrAscIIValues(char* pText, Unicode_Size_t uint_size, char* pBuffer, int buffer_len, void* pPlugin);
 extern int GetMACInfo(uint8_t* pBuffer, uint8_t max, void* pPlugin);
+extern int GetWordsOffsetInString(char* pWords, char* pString, void* pPlugin);
 
+extern void HexToHex(char *file_in,char *file_out, int new_addr, void* pPlugin);
 extern void HexToStr(uint8_t val, char* pBuffer, Case_type_t type, void* pPlugin);
+extern uint32_t HexStrToHex(char* pdata, uint8_t char_num, void* pPlugin);
+
 extern void Http_GetContext(const char* pURL, void* pBuffer, uint32_t max_len, void* pPlugin);
 extern void Http_ResContext(void* pPlugin);
 

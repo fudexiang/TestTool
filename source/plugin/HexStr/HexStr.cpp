@@ -75,6 +75,50 @@ int CHexStr::HexToStr(uint8_t val, char* pBuffer, Case_type_t type)
 	return 2;
 }
 
+int CHexStr::GetWordsOffsetInString(char* pWords, char* pString)
+{
+	int ret = -1, i, j;
+	int word_len = strlen(pWords);
+	int str_len = strlen(pString);
+	for (i = 0; i < str_len - word_len + 1; i++)
+	{
+		if (0 == memcmp(pWords, &pString[i], word_len))
+		{
+			ret = i;
+			break;
+		}
+	}
+
+	return ret;
+}
+
+uint32_t CHexStr::HexStrToHex(char* pdata, uint8_t num)
+{
+	uint32_t val = 0;
+	int i = 0, j = 0;
+	uint8_t temp;
+	do
+	{
+		temp = pdata[i];
+		if (('x' == temp) || ('X' == temp))
+		{
+			val = 0;
+			j = 0;
+		}
+		else
+		{
+			val = val << 4;
+			val |= get_nybble((unsigned char*)(&temp));
+
+			j++;
+		}
+
+		i++;
+	} while ((pdata[i] != '\0') && (j < 8) && (j<num));
+
+	return val;
+}
+
 /*
 U-00000000 - U-0000007F: 0xxxxxxx (not implemented)
 U-00000080 - U-000007FF: 110xxxxx 10xxxxxx (not implemented)
@@ -131,6 +175,7 @@ int CHexStr::UnicodeToUTF8_Values(char* pText, Unicode_Size_t uint_size, char *p
 
 	return offset;
 }
+
 CodeRet_t CHexStr::Hex2BinGenerate(void *pInfo)
 {
 	//Info_t *p = (Info_t *)pInfo;
@@ -217,7 +262,7 @@ CodeRet_t CHexStr::Hex2BinGenerate(void *pInfo)
 
 				new_file_flag = true;
 			}
-			else if (byte == RECORD_EXTENDED_LINEAR_ADDRESS) 
+			else if (byte == HEX_EXTENDED_LINEAR_ADDRESS) 
 			{
 				base_address = get_word(s) * 65536;
 				checksum += (uint8_t)get_byte(s);
@@ -296,6 +341,129 @@ CodeRet_t CHexStr::Hex2BinGenerate(void *pInfo)
 	fclose(f);
 
 	return RET_OK;
+}
+
+CodeRet_t CHexStr::Hex2HexGenerate(char* file_in, char* file_out, int new_addr)
+{
+	FILE* f = NULL;
+	FILE* f_record = NULL;
+	uint8_t* s;
+	uint8_t checksum;
+
+	uint32_t base_address = new_addr;
+	int num_bytes, line_number = 0, byte_val,i;
+	char line[256];
+
+	bool exit_flag = false;
+	errno_t err;
+
+	printf(file_in);
+	printf(file_out);
+	printf("/r/n");
+
+	err = fopen_s(&f, file_in, "r");
+
+	if (0 != err)
+		return RET_ERROR;
+
+	fopen_s(&f_record, file_out, "w+");
+	if (NULL == f_record)
+		return RET_ERROR;
+
+	//: len offset  type value checksum
+	//:	02	0000	04	1000	EA
+	while ((fgets(line, sizeof(line), f) != NULL) && (!exit_flag))
+	{
+		line_number++;
+		s = (unsigned char*)line;
+
+		/** step1:Must start with colon*/
+		if (s[0] != ':')
+		{
+			printf("Bad format on line %d: %s\n", line_number, line);
+			return RET_ERROR;
+		}
+		s++;
+
+		//reset checksum
+		checksum = 0;
+
+		/** step2: length of data*/
+		num_bytes = get_byte(&s[1]);
+		if (num_bytes == 0)
+		{
+			break;
+		}
+
+		checksum += (uint8_t)num_bytes;
+
+		/** step3: check type*/
+
+		/*
+		'00' Data Record//数据记录
+		'01' End of File Record//文件结束记录
+		'02' Extended Segment Address Record//扩展段地址记录
+		'03' Start Segment Address Record//开始段地址记录
+		'04' Extended Linear Address Record//扩展线性地址记录
+		'05' Start Linear Address Record//开始线性地址记录
+		*/
+		if ((byte_val = get_byte(&s[7])) == 4)
+		{
+			HexToStr((new_addr >> 28) & 0xf, (char*)s[9], LOWER_CASE);
+			HexToStr((new_addr >> 24) & 0xf, (char*)s[10], LOWER_CASE);
+			HexToStr((new_addr >> 20) & 0xf, (char*)s[11], LOWER_CASE);
+			HexToStr((new_addr >> 16) & 0xf, (char*)s[12], LOWER_CASE);
+		}
+		else if ((byte_val = get_byte(&s[7])) == 0)
+		{
+			HexToStr((new_addr >> 12) & 0xf, (char*)s[3], LOWER_CASE);
+			HexToStr((new_addr >> 8) & 0xf, (char*)s[4], LOWER_CASE);
+			HexToStr((new_addr >> 4) & 0xf, (char*)s[5], LOWER_CASE);
+			HexToStr((new_addr >> 0) & 0xf, (char*)s[6], LOWER_CASE);
+		}
+		else if ((byte_val = get_byte(&s[7])) == 1)
+		{
+			printf("reach end of file\n");
+			exit_flag = true;
+		}
+		else
+		{
+			printf("Bad type on line %d: %s\n", line_number, line);
+			return RET_ERROR;
+		}
+
+		checksum += (uint8_t)get_byte(&s[3]);
+		checksum += (uint8_t)get_byte(&s[5]);
+
+		checksum += (uint8_t)get_byte(&s[7]);
+
+		for (i = 0; i < num_bytes; i++)
+		{
+			byte_val = get_byte(&s[9+i*2]);
+
+			checksum += (uint8_t)byte_val;
+
+		}
+
+		/** step5: Verify checksum*/
+		checksum = ~checksum + 1;
+		HexToStr((checksum >> 4) & 0xf, (char*)s++, LOWER_CASE);
+		HexToStr((checksum >> 0) & 0xf, (char*)s++, LOWER_CASE);
+		*s = '/n';
+
+		fprintf(f_record, line);
+	}
+
+	fclose(f_record);
+
+	fclose(f);
+
+	return RET_OK;
+}
+
+void CHexStr::HexTst(void)
+{
+	printf("--->HexTst");
 }
 
 /*

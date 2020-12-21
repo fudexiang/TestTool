@@ -1,6 +1,9 @@
 #include "stdio.h"
 #include "Interfaces.h"
 
+/*
+this is an example for waiting commands outside to trigger mouse | click | keyboard actions
+*/
 void Mytest2(Threads_Control_t* p)
 {
 	void* pMKPlugin;
@@ -49,6 +52,9 @@ void Mytest2(Threads_Control_t* p)
 			case MOV_RIGHT:
 				MK_MoveMouse(mouse_pos.x+10, mouse_pos.y, pMKPlugin);
 				printf("-->MOV_RIGHT\r\n");
+				break;
+			case KEY_ENTER:
+				MK_EnterKey(p->key_val, pMKPlugin);
 				break;
 			}
 			p->mouse_msg.active = FUNC_DISABLE;

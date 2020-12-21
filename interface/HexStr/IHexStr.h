@@ -42,11 +42,19 @@ class IHexStr : public x3::IObject
 
 	virtual CodeRet_t Hex2BinGenerate(void *pInfo) = 0;
 
+	virtual CodeRet_t Hex2HexGenerate(char* file_in, char* file_out, int new_addr) = 0;
+
 	virtual CodeRet_t S19ToBinGenerate(void *pInfo) = 0;
 
 	virtual int UnicodeToUTF8_Values(char *pText, Unicode_Size_t uint_size,char *pBuffer,int buffer_len) = 0;
 
 	virtual int HexToStr(uint8_t val, char* pBuffer, Case_type_t type) = 0;
+
+	virtual int GetWordsOffsetInString(char* pWords, char* pString) = 0;
+
+	virtual uint32_t HexStrToHex(char* pdata, uint8_t num) = 0;
+
+	virtual void HexTst(void) = 0;
 };
 
 

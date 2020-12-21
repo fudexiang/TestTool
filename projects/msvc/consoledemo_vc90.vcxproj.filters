@@ -36,6 +36,12 @@
     <ClCompile Include="..\..\source\example\consoledemo\was_test.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\example\consoledemo\hex_test.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\example\consoledemo\keil_map_file_analysis.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\example\consoledemo\audio_demo_test.h">

@@ -186,7 +186,9 @@
   <ItemGroup>
     <ClCompile Include="..\..\source\example\consoledemo\audio_demo_register_tool_test.cpp" />
     <ClCompile Include="..\..\source\example\consoledemo\audio_demo_test.cpp" />
+    <ClCompile Include="..\..\source\example\consoledemo\hex_test.cpp" />
     <ClCompile Include="..\..\source\example\consoledemo\Interfaces.cpp" />
+    <ClCompile Include="..\..\source\example\consoledemo\keil_map_file_analysis.cpp" />
     <ClCompile Include="..\..\source\example\consoledemo\main.cpp" />
     <ClCompile Include="..\..\source\example\consoledemo\test1.cpp" />
     <ClCompile Include="..\..\source\example\consoledemo\test10.cpp" />

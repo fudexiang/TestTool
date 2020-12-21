@@ -2,10 +2,15 @@
 #include "Interfaces.h"
 
 #include "test_config.h"
+#include <process.h>
 
 DWORD WINAPI ThreadFunc1(LPVOID p)
 {
 	Threads_Control_t *pControl = (Threads_Control_t *)p;
+
+#ifdef HEX_TST
+	HexFileOperation(pControl);
+#endif
 
 #ifdef TEST_1
 	Mytest1(pControl);
@@ -47,11 +52,15 @@ DWORD WINAPI ThreadFunc2(LPVOID p)
 	Mytest3(pControl);
 #endif
 
+#ifdef KEIL_MAP_FILE_OPERATE
+	KeilMapFileOperation(pControl);
+#endif
+
 	pControl->Thread_count -= 1;
 	return 0;
 }
 
-int main()
+int main(int argc, char* argv[])
 {
 	
 	HANDLE hThread;
@@ -59,8 +68,9 @@ int main()
 	uint8_t buffer[0x100];
 	Threads_Control_t thread_control;
 
-#if 1
-	//system("md abc");
+#if 0
+	//create folder
+	system("md abc");
 #endif
 
 	LoadPlugins();

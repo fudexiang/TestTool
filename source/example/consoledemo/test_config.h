@@ -5,17 +5,24 @@
 #define END_APP_BY_Q
 //#define PLAY_MUSIC
 //#define REGISTER_TOOL
-#define AUDIO_PLAYER_CAPTURE
+//#define AUDIO_PLAYER_CAPTURE
 //#define TEST_1
 //#define TEST_2
 //#define TEST_3
 //#define TEST_10
 //#define TEST_11
 
+//#define HEX_TST
+#define KEIL_MAP_FILE_OPERATE
+
+#ifdef HEX_TST
+extern void HexFileOperation(Threads_Control_t* p);
+#endif
 
 #ifdef PLAY_MUSIC
 extern void Audio_Demo_Test(Threads_Control_t* pControl);
 #endif
+
 #ifdef REGISTER_TOOL
 extern void Audio_Register_Tool_Test(Threads_Control_t* pControl);
 #endif
@@ -44,4 +51,7 @@ extern void Mytest11(void);
 extern void WasTest(Threads_Control_t* gpConfig);
 #endif
 
+#ifdef KEIL_MAP_FILE_OPERATE
+extern void KeilMapFileOperation(Threads_Control_t* p);
+#endif
 #endif

@@ -137,6 +137,22 @@ int GetMACInfo(uint8_t* pBuffer, uint8_t max, void* pPlugin)
 	return i;
 }
 
+int GetWordsOffsetInString(char* pWords, char* pString, void* pPlugin)
+{
+	return (*(x3::Object<IHexStr>*)(pPlugin))->GetWordsOffsetInString(pWords, pString);
+}
+
+void HexToHex(char* file_in, char* file_out, int new_addr, void* pPlugin)
+{
+	//(*(x3::Object<IHexStr>*)(pPlugin))->Hex2HexGenerate(file_in, file_out, new_addr);
+	(*(x3::Object<IHexStr>*)(pPlugin))->HexTst();
+}
+
+uint32_t HexStrToHex(char* pdata, uint8_t char_num, void* pPlugin)
+{
+	return (*(x3::Object<IHexStr>*)(pPlugin))->HexStrToHex(pdata, char_num);
+}
+
 void HexToStr(uint8_t val, char* pBuffer, Case_type_t type, void* pPlugin)
 {
 	//pBuffer[0] = 'A';
@@ -168,9 +184,10 @@ void LoadPlugins(void)
 {
 	x3::loadScanPlugins();
 
-	pLocalLog = new x3::Object<ILogLib>(clsidLogLib);
-	(*pLocalLog)->CreateLogFile();
+	//pLocalLog = new x3::Object<ILogLib>(clsidLogLib);
+	pLocalLog = (x3::Object<ILogLib>*)CreatePlugin(PLUGIN_LOG, clsidLogLib);
 
+	(*pLocalLog)->CreateLogFile();
 }
 
 void LogPrintf(LogPrintLevel level,const char* fmt, ...)

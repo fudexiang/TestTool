@@ -366,11 +366,11 @@ void Mytest11(void)
 	BufferConfig.buffer_slot_num = SLOT_NUM;
 
 	//test
-#if 0
+#if 1
 	GenerateSignals(DeviceName, freq_sample / freq_signal_1);
 #endif
 
-#if 1
+#if 0
 	FileHandle(pIIRPlugin);
 #endif
 
